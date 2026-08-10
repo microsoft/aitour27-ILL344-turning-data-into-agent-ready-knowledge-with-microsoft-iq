@@ -33,7 +33,7 @@ Fill in the sections below yourself, then:
 
 # [Microsoft AI Tour 2027](https://aitour.microsoft.com)
 
-## 🔥 BRKXXX: SESSION TITLE
+## 🔥 ILL344: Turning data into agent-ready knowledge with Microsoft IQ
 
 ### Session description
 
