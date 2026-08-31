@@ -23,7 +23,7 @@ If you need to sign in to any Azure or Microsoft 365 apps, use the following cre
 
 ## Overview
 
-In this hands-on lab, you'll build an Azure AI Search knowledge base using agentic retrieval and extend it with Fabric IQ and Work IQ knowledge sources. You'll connect the knowledge base to indexed enterprise content, structured operational data, and workplace context for grounded, citation-backed answers across multiple systems.
+In this hands-on lab, you'll build a Foundry IQ (Azure AI Search) knowledge base using agentic retrieval and extend it with Fabric IQ and Work IQ knowledge sources. You'll connect the knowledge base to indexed enterprise content, structured operational data, and workplace context for grounded, citation-backed answers across multiple systems.
 
 Through 4 progressive notebook exercises, you'll build a multi-source document-backed knowledge base, add Fabric IQ and Work IQ, and finish by combining Work IQ and Fabric IQ in one KB. By the end, you'll have flexible agentic knowledge bases that blend multiple source types.
 
@@ -40,13 +40,13 @@ In the virtual machine, sign into Windows using the following credentials:
 
 ### Access the lab repository
 
-Once signed in to the Skillable environment, you'll find the lab repository already cloned on your desktop under the folder: **Desktop > Build26-LAB532-main**.
+Once signed in to the Skillable environment, you'll find the lab repository already cloned on your desktop under the folder: **Desktop > aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main**.
 
 > This folder contains all the code, notebooks, and resources you'll need for the lab.
 
 ### Open the project folder in Visual Studio Code
 
-Open Visual Studio Code and select **File > Open Folder**. Then navigate to Desktop and select the **Build26-LAB532-main** folder and then **Select Folder**.
+Open Visual Studio Code and select **File > Open Folder**. Then navigate to Desktop and select the **aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main** folder and then **Select Folder**.
 
 > [!TIP]
 >
@@ -54,12 +54,12 @@ Open Visual Studio Code and select **File > Open Folder**. Then navigate to Desk
 
 ### Verify the environment setup
 
-All required Azure services including **Azure AI Search with pre-indexed data** and **Azure OpenAI deployments** have already been provisioned for you.
+All required Azure services including **Foundry IQ (Azure AI Search) with pre-indexed data** and **Azure OpenAI deployments** have already been provisioned for you.
 
 <details>
 <summary><strong>📋 What's pre-configured (click to expand for details)</strong></summary>
 
-- **Azure AI Search** - Standard tier with two pre-created indexes:
+- **Foundry IQ (Azure AI Search)** - Standard tier with two pre-created indexes:
   - **hrdocs:** HR policies, employee handbook, role library, company overview
   - **healthdocs:** Health insurance plans, benefits options, coverage details
 - **Azure OpenAI** - Deployed models **gpt-5.4** for chat completion and answer synthesis and **text-embedding-3-large** for vector embeddings

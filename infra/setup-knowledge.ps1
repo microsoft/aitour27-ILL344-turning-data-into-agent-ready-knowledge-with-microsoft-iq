@@ -15,13 +15,13 @@ $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $env:PYTHONIOENCODING = "utf-8"
 
-$repoRoot = "C:\Users\LabUser\Desktop\Build26-LAB532-main"
-$knowledgeFolder = Join-Path $repoRoot "notebooks"
+$repoRoot = "C:\Users\LabUser\Desktop\aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main"
+$knowledgeFolder = Join-Path $repoRoot "src\notebooks"
 $infraFolder = Join-Path $repoRoot "infra"
 
 # Create .env content
 $envContent = @"
-# Azure AI Search Configuration
+# Foundry IQ (Azure AI Search) Configuration
 AZURE_SEARCH_SERVICE_ENDPOINT=$SearchEndpoint
 AZURE_SEARCH_ADMIN_KEY=$SearchAdminKey
 

@@ -42,7 +42,7 @@ openai_key = post(
 env_path = Path(__file__).parents[1] / ".env"
 env_path.write_text(
     f"""\
-# Azure AI Search Configuration
+# Foundry IQ (Azure AI Search) Configuration
 AZURE_SEARCH_SERVICE_ENDPOINT={os.environ['AZURE_SEARCH_SERVICE_ENDPOINT']}
 AZURE_SEARCH_ADMIN_KEY={search_key}
 

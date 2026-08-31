@@ -1,14 +1,14 @@
 # Summary
 
-You've completed the lab on building agentic knowledge bases with Azure AI Search and multiple source types. Through 4 progressive notebooks, you built a multi-source document-backed KB, added Fabric IQ and Work IQ, and combined Work IQ with Fabric IQ.
+You've completed the lab on building agentic knowledge bases with Foundry IQ (Azure AI Search) and multiple source types. Through 4 progressive notebooks, you built a multi-source document-backed KB, added Fabric IQ and Work IQ, and combined Work IQ with Fabric IQ.
 
 ## Continue learning
 
-- [Azure AI Search](https://learn.microsoft.com/azure/search/) - Explore the full capabilities of Azure AI Search and how it integrates with other Azure services.
-- [Design an index for agentic retrieval in Azure AI Search](https://learn.microsoft.com/azure/search/search-agentic-retrieval-how-to-index) - Best practices for structuring your data for agentic retrieval.
-- [Create a knowledge base in Azure AI Search](https://learn.microsoft.com/azure/search/search-agentic-retrieval-how-to-create?tabs=rbac%2Cpython-get-agents%2Cpython-create-agent%2Cpython-query-agent%2Cpython-delete-agent) - Step-by-step guide to creating and configuring knowledge bases.
+- [Foundry IQ (Azure AI Search)](https://learn.microsoft.com/azure/search/) - Explore the full capabilities of Foundry IQ (Azure AI Search) and how it integrates with other Azure services.
+- [Design an index for agentic retrieval in Foundry IQ (Azure AI Search)](https://learn.microsoft.com/azure/search/search-agentic-retrieval-how-to-index) - Best practices for structuring your data for agentic retrieval.
+- [Create a knowledge base in Foundry IQ (Azure AI Search)](https://learn.microsoft.com/azure/search/search-agentic-retrieval-how-to-create?tabs=rbac%2Cpython-get-agents%2Cpython-create-agent%2Cpython-query-agent%2Cpython-delete-agent) - Step-by-step guide to creating and configuring knowledge bases.
 - [Create a knowledge source](https://learn.microsoft.com/azure/search/search-knowledge-source-overview) - Understand how to create and configure different data sources.
-- [Use answer synthesis for citation-backed responses in Azure AI Search](https://learn.microsoft.com/azure/search/search-agentic-retrieval-how-to-synthesize) - Learn how to generate grounded answers with citations using answer synthesis.
+- [Use answer synthesis for citation-backed responses in Foundry IQ (Azure AI Search)](https://learn.microsoft.com/azure/search/search-agentic-retrieval-how-to-synthesize) - Learn how to generate grounded answers with citations using answer synthesis.
 
 ## Next steps
 

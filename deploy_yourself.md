@@ -1,6 +1,6 @@
 # Deploy to Your Own Azure Subscription
 
-This folder contains resources for deploying the LAB532 Knowledge Base infrastructure to your own Azure subscription.
+This folder contains resources for deploying the ILL344 knowledge base infrastructure to your own Azure subscription.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ You'll need permissions to:
 - Create resource groups
 - Deploy Bicep templates
 - Create and manage:
-  - Azure AI Search services
+  - Foundry IQ (Azure AI Search) services
   - Microsoft Foundry projects
   - Azure OpenAI model deployments
 - Assign Azure RBAC roles
@@ -28,8 +28,8 @@ You'll need permissions to:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/microsoft/Build26-LAB532-from-data-to-context-agent-ready-knowledge-with-foundry-iq.git
-cd Build26-LAB532-from-data-to-context-agent-ready-knowledge-with-foundry-iq
+git clone https://github.com/microsoft/aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq.git
+cd aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq
 ```
 
 ### 2. Create a Python virtual environment
@@ -69,7 +69,7 @@ azd down
 
 ## Additional Resources
 
-- [Azure AI Search Documentation](https://learn.microsoft.com/azure/search/)
+- [Foundry IQ (Azure AI Search) Documentation](https://learn.microsoft.com/azure/search/)
 - [Azure OpenAI Service Documentation](https://learn.microsoft.com/azure/ai-services/openai/)
 - [Azure Bicep Documentation](https://learn.microsoft.com/azure/azure-resource-manager/bicep/)
 - [Microsoft Foundry Community Discord](https://aka.ms/AIFoundryDiscord-Ignite25)

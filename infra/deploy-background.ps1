@@ -107,7 +107,7 @@ if ($missingParams.Count -gt 0) {
     exit 1
 }
 
-$localInfraPath = "C:\Users\LabUser\Desktop\Build26-LAB532-main\infra"
+$localInfraPath = "C:\Users\LabUser\Desktop\aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main\infra"
 $setupLocal = Join-Path $localInfraPath "setup-knowledge.ps1"
 
 if (-not (Test-Path $setupLocal)) {
@@ -115,7 +115,7 @@ if (-not (Test-Path $setupLocal)) {
     exit 1
 }
 
-$docsPath = "C:\Users\LabUser\Desktop\Build26-LAB532-main\data\ai-search-data"
+$docsPath = "C:\Users\LabUser\Desktop\aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main\data\ai-search-data"
 [Environment]::SetEnvironmentVariable("LOCAL_DOCS_PATH", $docsPath, "Process")
 
 Log "Running setup-knowledge.ps1..."

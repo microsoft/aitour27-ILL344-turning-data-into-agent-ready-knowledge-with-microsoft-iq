@@ -1,11 +1,11 @@
 
-# Lab 532: Build Agentic Knowledge Bases with Azure AI Search
+# ILL344: Turning data into agent-ready knowledge with Microsoft IQ
 
-These instructions are for participants of the **instructor-led** Workshop "Build Agentic Knowledge Bases: Next-Level RAG with Azure AI Search" at Microsoft Build 2026.
+These instructions are for participants of the **instructor-led lab** **ILL344: Turning data into agent-ready knowledge with Microsoft IQ** at Microsoft AI Tour.
 
 ## Lab Overview
 
-In this hands-on lab, you'll build Azure AI Search Knowledge Bases across a four-part flow: search indexes, Fabric IQ, Work IQ, and a combined Work IQ + Fabric IQ experience. By the end, you'll have flexible KBs that blend indexed, structured, and workplace knowledge sources.
+In this hands-on lab, you'll build Foundry IQ (Azure AI Search) Knowledge Bases across a four-part flow: search indexes, Fabric IQ, Work IQ, and a combined Work IQ + Fabric IQ experience. By the end, you'll have flexible KBs that blend indexed, structured, and workplace knowledge sources.
 
 ## Prerequisites
 
@@ -14,10 +14,10 @@ To get the most out of this lab, you should have a basic understanding of the fo
 - **Python and Jupyter Notebooks** – You will write and run code cells directly inside a Jupyter environment.  
 - **Azure Fundamentals** – Familiarity with Azure services and concepts such as resource groups, storage accounts, and authentication.  
 - **Retrieval-Augmented Generation (RAG)** – A general understanding of how LLMs use external data for grounding will help you better follow the agentic retrieval flow.  
-- **Azure AI Search and OpenAI** – Basic knowledge of what these services do (indexing, querying, embeddings, completions) is helpful but not required.
+- **Foundry IQ (Azure AI Search) and OpenAI** – Basic knowledge of what these services do (indexing, querying, embeddings, completions) is helpful but not required.
 
 > [!NOTE]  
-> You do **not** need to provision any Azure services or deploy infrastructure manually for this lab. All required resources including Azure AI Search, OpenAI deployments, and data sources — are pre-created and ready to use.
+> You do **not** need to provision any Azure services or deploy infrastructure manually for this lab. All required resources including Foundry IQ (Azure AI Search), OpenAI deployments, and data sources — are pre-created and ready to use.
 
 ## Get Started
 
@@ -39,4 +39,4 @@ If you enjoyed this workshop, consider giving the repository a ⭐ on GitHub and
 ## Source Code
 
 The source code for this session is available in the [notebooks folder](../src/notebooks) of this repository.  
-You can use it as a reference for future projects, extend it with additional capabilities, or integrate it into your own solutions built on Azure AI Search and agentic retrieval.
+You can use it as a reference for future projects, extend it with additional capabilities, or integrate it into your own solutions built on Foundry IQ (Azure AI Search) and agentic retrieval.

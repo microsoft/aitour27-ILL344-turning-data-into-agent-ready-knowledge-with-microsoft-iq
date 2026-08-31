@@ -1,6 +1,6 @@
 ## Before you're done
 
-This repo has been created for your AI Tour 2027 session. Here's how to get it ready.
+This repo has been created for your AI Tour session. Here's how to get it ready.
 
 **Easiest path — use the agent (recommended):**
 
@@ -28,10 +28,10 @@ Fill in the sections below yourself, then:
 <a name="start-building"></a>
 
 <p align="center">
-<img src="img/banner-ai-tour-27.png" alt="Microsoft AI Tour 2027" width="100%"/>
+<img src="img/banner-ai-tour-27.png" alt="Microsoft AI Tour" width="100%"/>
 </p>
 
-# [Microsoft AI Tour 2027](https://aitour.microsoft.com)
+# [Microsoft AI Tour](https://aitour.microsoft.com)
 
 ## 🔥 ILL344: Turning data into agent-ready knowledge with Microsoft IQ
 
@@ -61,7 +61,7 @@ If you're learning at your own pace:
 
 By the end of this session, you will be able to:
 
-- Build a multi-source knowledge base over indexed enterprise content using Azure AI Search agentic retrieval.
+- Build a multi-source knowledge base over indexed enterprise content using Foundry IQ (Azure AI Search) agentic retrieval.
 - Extend a knowledge base with Fabric IQ and Work IQ knowledge sources.
 - Build a Python agent using Microsoft Agent Framework with answers grounded in a Foundry IQ knowledge base.
 
@@ -80,11 +80,11 @@ Pick your next step based on your learning style:
 | Resource | What you'll get |
 |----------|-----------------|
 
-| **[Foundry IQ (Azure AI Search) documentation](https://learn.microsoft.com/azure/search/)** | Explore the full capabilities of Azure AI Search |
+| **[Foundry IQ (Azure AI Search) documentation](https://learn.microsoft.com/azure/search/)** | Explore the full capabilities of Foundry IQ (Azure AI Search) |
 | **[Create a knowledge base](https://learn.microsoft.com/azure/search/agentic-retrieval-how-to-create-knowledge-base)** | Follow the steps to create and configure a knowledge base |
 | **[Design an index for agentic retrieval](https://learn.microsoft.com/azure/search/agentic-retrieval-how-to-create-index)** | Learn best practices for structuring data for agentic retrieval |
 | **[Microsoft Learn](https://learn.microsoft.com)** | Official documentation and guided learning paths on these topics |
-| **[AI Tour 2027 Resource Center](https://aka.ms/aitour27-resource-center)** | Additional session repos and materials from AI Tour 2027 |
+| **[AI Tour Resource Center](https://aka.ms/aitour27-resource-center)** | Additional session repos and materials from AI Tour |
 | **[Microsoft Foundry Community](https://aka.ms/MicrosoftFoundryDiscord-AITour27)** | Connect with other learners and experts in our Discord community |
 
 ### 🌟 Microsoft Learn MCP Server

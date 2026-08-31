@@ -1,6 +1,6 @@
 // ===============================================
-// Bicep template for LAB532
-// Creates: Azure AI Search, Microsoft Foundry (with model deployments), Fabric capacity
+// Bicep template for ILL344 at Microsoft AI Tour
+// Creates: Foundry IQ (Azure AI Search), Microsoft Foundry (with model deployments), Fabric capacity
 // ===============================================
 
 @description('Principal ID for role assignments (provided by azd)')
@@ -65,7 +65,7 @@ var resourceNames = {
 // AZURE AI SEARCH SERVICE
 // ===============================================
 
-@description('Azure AI Search service for vector search and document indexing')
+@description('Foundry IQ (Azure AI Search) service for vector search and document indexing')
 resource searchService 'Microsoft.Search/searchServices@2023-11-01' = {
   name: resourceNames.searchService
   location: 'westcentralus'
@@ -321,10 +321,10 @@ output MICROSOFT_FOUNDRY_PROJECT_ENDPOINT string = 'https://${microsoftFoundryAc
 @description('Microsoft Foundry project resource ID')
 output MICROSOFT_FOUNDRY_PROJECT_ID string = microsoftFoundryProject.id
 
-@description('Azure AI Search service endpoint')
+@description('Foundry IQ (Azure AI Search) service endpoint')
 output AZURE_SEARCH_SERVICE_ENDPOINT string = 'https://${searchService.name}.search.windows.net'
 
-@description('Azure AI Search service name')
+@description('Foundry IQ (Azure AI Search) service name')
 output AZURE_SEARCH_SERVICE_NAME string = searchService.name
 
 @description('Azure OpenAI service endpoint (via Microsoft Foundry account)')

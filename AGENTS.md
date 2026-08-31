@@ -18,7 +18,7 @@ This file contains instructions and guidelines for AI agents working on this rep
 ## 📋 Repository Guidelines
 
 ### Purpose
-This repository is a Microsoft Build 2026 session content repository and should:
+This repository is a Microsoft AI Tour session content repository and should:
 - Provide clear, actionable content for session attendees
 - Support self-guided learning for remote/at-home learners
 - Follow the structure established by GUIDANCE.md

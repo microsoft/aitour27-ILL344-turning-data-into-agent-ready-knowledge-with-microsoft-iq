@@ -4,7 +4,7 @@
 
 # Set variables
 $token = "SECRET"
-$targetPath = "C:\Users\LabUser\Desktop\Build26-LAB532-main"
+$targetPath = "C:\Users\LabUser\Desktop\aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main"
 $tempZip = "$env:TEMP\repo.zip"
 
 # Download as ZIP using GitHub API
@@ -13,7 +13,7 @@ $headers = @{
     Accept = "application/vnd.github+json"
 }
 
-$zipUrl = "https://api.github.com/repos/microsoft/Build26-LAB532-from-data-to-context-agent-ready-knowledge-with-foundry-iq/zipball/main"
+$zipUrl = "https://api.github.com/repos/microsoft/aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq/zipball/main"
 
 Invoke-WebRequest -Uri $zipUrl -Headers $headers -OutFile $tempZip -UseBasicParsing
 

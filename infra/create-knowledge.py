@@ -46,7 +46,7 @@ async def restore_index(endpoint: str, index_name: str, index_file: str, records
                 index.name = index_name
                 index.vector_search.vectorizers[0].parameters.resource_url = azure_openai_endpoint
                 
-                log_message(f"[{index_name}] Creating/updating index in Azure AI Search...")
+                log_message(f"[{index_name}] Creating/updating index in Foundry IQ (Azure AI Search)...")
                 await client.create_or_update_index(index)
                 log_message(f"[{index_name}] Index created/updated successfully")
 
@@ -110,7 +110,7 @@ async def restore_index(endpoint: str, index_name: str, index_file: str, records
 async def main():
     # Initialize log file
     log_message("="*80)
-    log_message("Azure AI Search Index Restoration Script - Starting")
+    log_message("Foundry IQ (Azure AI Search) Index Restoration Script - Starting")
     log_message("="*80)
     log_message(f"Azure Search Endpoint: {endpoint}")
     log_message(f"Azure OpenAI Endpoint: {azure_openai_endpoint}")
