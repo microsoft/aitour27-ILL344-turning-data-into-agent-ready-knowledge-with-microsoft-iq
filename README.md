@@ -37,7 +37,7 @@ Fill in the sections below yourself, then:
 
 ### Session description
 
-Add your session description here. Keep it concise — 2-3 sentences about what attendees will learn and why it matters.
+Use Foundry IQ to build a multi-source knowledge base with agentic retrieval, Fabric IQ to retrieve data from OneLake & Work IQ to include org data and build an agent using the combined retrieval power of the IQs to reason across files, data, & work signals.​
 
 ### 🚀 Getting started
 
@@ -45,33 +45,34 @@ Add your session description here. Keep it concise — 2-3 sentences about what 
 
 If you're following along during a live session:
 
-1. Step 1
-2. Step 2
-3. Open [`instructions/`](instructions/README.md) when this session includes
-   attendee step-by-step guidance
+1. Open the lab environment and sign in with the provided credentials.
+2. Follow the setup guidance in [`instructions/overview.md`](instructions/overview.md).
+3. Open [`src/notebooks/`](src/notebooks/), start with [`part1-standard-foundry-iq-kb.ipynb`](src/notebooks/part1-standard-foundry-iq-kb.ipynb), and work through all five notebooks sequentially.
 
 #### On your own
 
 If you're learning at your own pace:
 
-1. Clone this repository
-2. Set up your environment
-3. Follow the session guidance in [`instructions/`](instructions/README.md), or
-   use the linked docs-site entry point when this repository uses that pattern
+1. Clone this repository.
+2. Provision the required resources by following the [self-deployment guide](deploy_yourself.md).
+3. Follow [`instructions/overview.md`](instructions/overview.md), then work through all five notebooks in [`src/notebooks/`](src/notebooks/) sequentially.
 
 ### 🎯 Learning outcomes
 
 By the end of this session, you will be able to:
 
-- Outcome 1
-- Outcome 2
-- Outcome 3
+- Build a multi-source knowledge base over indexed enterprise content using Azure AI Search agentic retrieval.
+- Extend a knowledge base with Fabric IQ and Work IQ knowledge sources.
+- Build a Python agent using Microsoft Agent Framework with answers grounded in a Foundry IQ knowledge base.
+- Combine indexed, structured, workplace, and web-grounded sources in one knowledge base and query it with citation-backed answer synthesis.
 
 ### 💻 Technologies used
 
-- Technology 1
-- Technology 2
-- Technology 3
+- Foundry IQ (Azure AI Search)
+- Azure OpenAI (`gpt-5.4-mini` and `text-embedding-3-large`)
+- Model Context Protocol (MCP)
+- Microsoft Fabric IQ and Work IQ
+- Python and Jupyter Notebooks
 
 ### 📚 Continue your learning
 
@@ -79,6 +80,10 @@ Pick your next step based on your learning style:
 
 | Resource | What you'll get |
 |----------|-----------------|
+
+| **[Foundry IQ (Azure AI Search) documentation](https://learn.microsoft.com/azure/search/)** | Explore the full capabilities of Azure AI Search |
+| **[Create a knowledge base](https://learn.microsoft.com/azure/search/agentic-retrieval-how-to-create-knowledge-base)** | Follow the steps to create and configure a knowledge base |
+| **[Design an index for agentic retrieval](https://learn.microsoft.com/azure/search/agentic-retrieval-how-to-create-index)** | Learn best practices for structuring data for agentic retrieval |
 | **[Microsoft Learn](https://learn.microsoft.com)** | Official documentation and guided learning paths on these topics |
 | **[AI Tour 2027 Resource Center](https://aka.ms/aitour27-resource-center)** | Additional session repos and materials from AI Tour 2027 |
 | **[Microsoft Foundry Community](https://aka.ms/MicrosoftFoundryDiscord-AITour27)** | Connect with other learners and experts in our Discord community |
@@ -102,17 +107,17 @@ For more information, visit the [Learn MCP Server repo](https://aka.ms/learnmcp)
 
 ### 👥 Content owners
 
-<!-- TODO: Add yourself as a content owner
-1. Change the src in the image tag to {your github url}.png
-2. Change INSERT NAME HERE to your name
-3. Change the github url in the final href to your url. -->
-
 <table>
 <tr>
-    <td align="center"><a href="http://github.com/yourGitHubHandle">
-        <img src="https://github.com/yourGitHubHandle.png" width="100px;" alt="INSERT NAME HERE"/><br />
-        <sub><b>INSERT NAME HERE</b></sub></a><br />
-            <a href="https://github.com/yourGitHubHandle" title="talk">📢</a>
+    <td align="center"><a href="https://github.com/pamelafox">
+        <img src="https://github.com/pamelafox.png" width="100px;" alt="Pamela Fox"/><br />
+        <sub><b>Pamela Fox</b></sub></a><br />
+            <a href="https://github.com/pamelafox" title="talk">📢</a>
+    </td>
+    <td align="center"><a href="https://github.com/aycabas">
+        <img src="https://github.com/aycabas.png" width="100px;" alt="Ayca Bas"/><br />
+        <sub><b>Ayca Bas</b></sub></a><br />
+            <a href="https://github.com/aycabas" title="talk">📢</a>
     </td>
 </tr></table>
 

@@ -427,3 +427,16 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Imported source repository patterns
+*.bak
+_remove-before-publish/*
+!_remove-before-publish/README.md
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+*.swo
+.env.local
+.env.*.local
+.venv/
