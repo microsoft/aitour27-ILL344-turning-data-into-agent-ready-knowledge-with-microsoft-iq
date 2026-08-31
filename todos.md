@@ -1,6 +1,5 @@
 # TODOs
 
-* Remove Web IQ
 * Change data to Caldova data
 * Change Copilot CLI to GitHub Copilot App
 * Add a step that creates an agent using MAF agent

@@ -23,9 +23,9 @@ If you need to sign in to any Azure or Microsoft 365 apps, use the following cre
 
 ## Overview
 
-In this hands-on lab, you'll build an Azure AI Search knowledge base using agentic retrieval and extend it with Model Context Protocol (MCP) knowledge sources. You'll connect the knowledge base to both indexed enterprise content and live MCP servers, enabling grounded, citation-backed answers across multiple systems.
+In this hands-on lab, you'll build an Azure AI Search knowledge base using agentic retrieval and extend it with Fabric IQ and Work IQ knowledge sources. You'll connect the knowledge base to indexed enterprise content, structured operational data, and workplace context for grounded, citation-backed answers across multiple systems.
 
-Through 5 progressive notebook exercises, you'll build a multi-source document-backed knowledge base, extend it with web search results through MCP, add Fabric IQ and Work IQ, and finish by combining Work IQ and Fabric IQ in one KB. By the end, you'll have flexible agentic knowledge bases that blend multiple source types.
+Through 4 progressive notebook exercises, you'll build a multi-source document-backed knowledge base, add Fabric IQ and Work IQ, and finish by combining Work IQ and Fabric IQ in one KB. By the end, you'll have flexible agentic knowledge bases that blend multiple source types.
 
 ## Getting started
 
@@ -102,17 +102,16 @@ If your indexes are present and populated, your environment is ready to use. You
 
 ### Work through the Jupyter notebooks
 
-This lab includes 5 progressive notebooks covering different knowledge base and source type patterns:
+This lab includes 4 progressive notebooks covering different knowledge base and source type patterns:
 
 1. **Multi-source search indexes** - Build a knowledge base over those search indexes plus an uploaded file
-2. **Web IQ source** - Add Web IQ through an MCP knowledge source to ground answers in web results
-3. **Fabric IQ source** - Add Fabric IQ through a Fabric Ontology knowledge source
-4. **Work IQ source** - Bring Work IQ into the KB as a first-party source, authenticated based on your user login
-5. **Work IQ + Fabric IQ** - Combine workplace data and structured Fabric data in one knowledge base
+2. **Fabric IQ source** - Add Fabric IQ through a Fabric Ontology knowledge source
+3. **Work IQ source** - Bring Work IQ into the KB as a first-party source, authenticated based on your user login
+4. **Work IQ + Fabric IQ** - Combine workplace data and structured Fabric data in one knowledge base
 
 Start with **part1-standard-foundry-iq-kb.ipynb** in the **src/notebooks/** folder and progress through each notebook sequentially.
 
 > [!TIP]
-> **Bonus: Copilot CLI sidequest** - Each notebook includes a bonus section that prints an MCP configuration for the knowledge base you just created. Follow the instructions in **src/notebooks/copilot-cli-sidequest.md** to add it to GitHub Copilot CLI and query your KB directly from the terminal.
+> **Bonus: Copilot CLI sidequest** - Part 1 includes a bonus section that prints an MCP configuration for the knowledge base you created. Follow the instructions in **src/notebooks/copilot-cli-sidequest.md** to add it to GitHub Copilot CLI and query your KB directly from the terminal.
 
-Once you've completed all 5 notebooks, select **Next** to review key takeaways and next steps.
+Once you've completed all 4 notebooks, select **Next** to review key takeaways and next steps.

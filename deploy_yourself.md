@@ -53,7 +53,7 @@ This will:
 - Create search indexes and upload sample data
 - Set up the Fabric Lakehouse with Zava DIY dataset and ontology
 
-> **Note:** Email seeding (used in the hosted Skillable lab for Part 4 - Work IQ) requires a service principal with `Mail.Send` application permission and is **not run** during self-deploy. Part 4 will use your own mailbox data instead.
+> **Note:** Email seeding (used in the hosted Skillable lab for Part 3 - Work IQ) requires a service principal with `Mail.Send` application permission and is **not run** during self-deploy. Part 3 will use your own mailbox data instead.
 
 ### 4. Start the Lab
 
