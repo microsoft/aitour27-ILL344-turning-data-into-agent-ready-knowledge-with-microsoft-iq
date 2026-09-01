@@ -9,6 +9,9 @@ param principalId string
 @description('Whether to deploy Fabric capacity')
 param deployFabricCapacity bool = true
 
+@description('Deploy temporary Blob Storage used by the Azure AI Search indexing pipeline')
+param deployIndexingStorage bool = false
+
 @description('User email/UPN for Fabric capacity administration')
 param fabricAdminUpn string = ''
 
@@ -16,7 +19,7 @@ param fabricAdminUpn string = ''
 param spPrincipalId string = ''
 
 @description('The name prefix for all resources')
-param resourcePrefix string = 'lab532'
+param resourcePrefix string = 'ill344'
 
 @description('The location where all resources will be deployed')
 param location string
@@ -55,6 +58,7 @@ var uniqueSuffix = uniqueString(resourceGroup().id)
 var resourceNames = {
   searchService: '${resourcePrefix}-search-${uniqueSuffix}'
   searchIndex: '${resourcePrefix}-index'
+  indexingStorage: take(toLower(replace('${resourcePrefix}idx${uniqueSuffix}', '-', '')), 24)
   microsoftFoundry: '${resourcePrefix}-foundry-${uniqueSuffix}'
   microsoftFoundryProject: '${resourcePrefix}-project-${uniqueSuffix}'
   embeddingDeployment: 'text-embedding-3-large'
@@ -96,13 +100,65 @@ resource searchService 'Microsoft.Search/searchServices@2023-11-01' = {
   }
 }
 
+module indexingStorage 'br/public:avm/res/storage/storage-account:0.33.0' = if (deployIndexingStorage) {
+  params: {
+    name: resourceNames.indexingStorage
+    location: location
+    skuName: 'Standard_LRS'
+    allowBlobPublicAccess: false
+    publicNetworkAccess: 'Enabled'
+    networkAcls: {
+      bypass: 'AzureServices'
+      defaultAction: 'Allow'
+    }
+    blobServices: {
+      containers: [
+        {
+          name: 'knowledge'
+          publicAccess: 'None'
+        }
+      ]
+    }
+  }
+}
+
+resource indexingStorageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' existing = if (deployIndexingStorage) {
+  name: deployIndexingStorage ? resourceNames.indexingStorage : 'disabled'
+}
+
+resource maintainerIndexingStorageRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (deployIndexingStorage) {
+  name: guid(indexingStorageAccount.id, principalId, 'Storage Blob Data Contributor')
+  scope: indexingStorageAccount
+  properties: {
+    principalId: principalId
+    principalType: 'User'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
+  }
+  dependsOn: [
+    indexingStorage
+  ]
+}
+
+resource searchIndexingStorageRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (deployIndexingStorage) {
+  name: guid(indexingStorageAccount.id, searchService.id, 'Storage Blob Data Reader')
+  scope: indexingStorageAccount
+  properties: {
+    principalId: searchService.identity.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1')
+  }
+  dependsOn: [
+    indexingStorage
+  ]
+}
+
 // ===============================================
 // SERVICE PRINCIPAL ROLE ASSIGNMENTS
 // ===============================================
 
 // Search Index Data Contributor role for SP
 resource SPuserSearchIndexContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(uniqueSuffix, 'sp-data-reader') 
+  name: guid(searchService.id, 'sp-data-reader')
   scope: searchService
   properties: {
     principalId: searchService.identity.principalId
@@ -326,6 +382,12 @@ output AZURE_SEARCH_SERVICE_ENDPOINT string = 'https://${searchService.name}.sea
 
 @description('Foundry IQ (Azure AI Search) service name')
 output AZURE_SEARCH_SERVICE_NAME string = searchService.name
+
+@description('Resource ID of the optional maintainer indexing storage account')
+output INDEXING_STORAGE_ACCOUNT_ID string = indexingStorage.?outputs.?resourceId ?? ''
+
+@description('Name of the optional maintainer indexing storage account')
+output INDEXING_STORAGE_ACCOUNT_NAME string = indexingStorage.?outputs.?name ?? ''
 
 @description('Azure OpenAI service endpoint (via Microsoft Foundry account)')
 output AZURE_OPENAI_ENDPOINT string = microsoftFoundryAccount.properties.endpoint

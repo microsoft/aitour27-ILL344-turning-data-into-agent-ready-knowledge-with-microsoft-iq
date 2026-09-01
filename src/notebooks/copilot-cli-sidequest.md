@@ -4,7 +4,7 @@ Every Foundry IQ knowledge base exposes an MCP server, and you can use GitHub Co
 
 ## 1. Sign in to GitHub
 
-Login at https://github.com/enterprises/skillable-events/sso
+Sign in through the [Skillable Events GitHub enterprise](https://github.com/enterprises/skillable-events/sso).
 
 You will be signed into a special account created for the lab environment, not your actual GitHub account.
 
@@ -20,23 +20,22 @@ copilot login
 
 As part of the authorization step, you will be prompted to enter an 8-digit device code that is printed in the terminal.
 
-
 ## 3. Add the KB MCP server
 
 Run the command printed by the notebook checkpoint cell. It will look like this:
 
 ```powershell
-copilot mcp add zava-kb "<KB MCP URL>" --header "api-key=<SERVICE KEY>"
+copilot mcp add caldova-kb "<KB MCP URL>" --header "api-key=<SERVICE KEY>"
 ```
 
 When it succeeds, you will see output like this:
 
-```
-Added server "zava-kb"
+```text
+Added server "caldova-kb"
 
-zava-kb
+caldova-kb
   Type: http
-  URL: https://lab532-search-2ijs67lu3y3ty.search.windows.net/knowledgebases/multisource-search-knowledge-base/mcp?api-version=2026-05-01-preview
+  URL: https://${AZURE_SEARCH_SERVICE_NAME}.search.windows.net/knowledgebases/caldova-supply-chain-knowledge-base/mcp?api-version=2026-05-01-preview
   Headers:
     api-key: ***
   Tools: * (all)
@@ -48,7 +47,7 @@ zava-kb
 Ask Copilot a question that matches the notebook you just ran. For example:
 
 ```powershell
-copilot -i "Use the Zava knowledge base to answer: what health benefits are available?"
+copilot -i "Use the Caldova knowledge base to compare Summit Dose's documented CALD-201 commitments across its RFP response, agreement amendment, and purchase order."
 ```
 
-You can try asking the question without prefacing it with "Use Zava knowledge base to answer", but the Copilot CLI agent may not choose to invoke the KB MCP server, as it may answer from its weights or using a different tool.
+You can try asking the question without prefacing it with "Use the Caldova knowledge base", but the Copilot CLI agent may not choose to invoke the KB MCP server, as it may answer from its weights or using a different tool.

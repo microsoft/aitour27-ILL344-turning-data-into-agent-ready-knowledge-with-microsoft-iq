@@ -10,6 +10,9 @@
     },
     "deployFabricCapacity": {
       "value": "${DEPLOY_FABRIC_CAPACITY=true}"
+    },
+    "deployIndexingStorage": {
+      "value": "${DEPLOY_INDEXING_STORAGE=false}"
     }
   }
 }

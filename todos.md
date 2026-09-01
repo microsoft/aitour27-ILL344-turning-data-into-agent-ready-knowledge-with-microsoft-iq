@@ -1,6 +1,6 @@
 # TODOs
 
-* Change data to Caldova data
+* Update sample data for Work IQ and verify
 * Change Copilot CLI to GitHub Copilot App
 * Add a step that creates an agent using MAF agent
 * Update delivery-resources/README.md

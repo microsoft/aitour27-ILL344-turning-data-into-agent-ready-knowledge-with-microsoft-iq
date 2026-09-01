@@ -51,7 +51,7 @@ This will:
 - Provision all Azure resources (AI Search, Foundry project, OpenAI models, Fabric capacity)
 - Fetch API keys and write a `.env` file with all required variables
 - Create search indexes and upload sample data
-- Set up the Fabric Lakehouse with Zava DIY dataset and ontology
+- Set up the `CaldovaSupplierAnalytics` lakehouse and `CaldovaMedicinalProductOntology`
 
 > **Note:** Email seeding (used in the hosted Skillable lab for Part 3 - Work IQ) requires a service principal with `Mail.Send` application permission and is **not run** during self-deploy. Part 3 will use your own mailbox data instead.
 

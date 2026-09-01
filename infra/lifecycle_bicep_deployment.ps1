@@ -43,7 +43,7 @@ $deletedJson = az cognitiveservices account list-deleted -o json 2>$null
 if ($deletedJson -and $deletedJson -ne "[]") {
     $deletedAccounts = $deletedJson | ConvertFrom-Json
     foreach ($account in $deletedAccounts) {
-        if ($account.name -like "lab532-foundry-*") {
+        if ($account.name -like "ill344-foundry-*") {
             Log "Purging soft-deleted Cognitive Services account: $($account.name) (location: $($account.location))"
             az cognitiveservices account purge --location $account.location --resource-group $resourceGroupName --name $account.name 2>&1 | Out-Null
             Log "Purged: $($account.name)"
@@ -116,16 +116,13 @@ if ($missingParams.Count -gt 0) {
     exit 1
 }
 
-$localInfraPath = "C:\Users\LabUser\Desktop\aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main\infra"
+$localInfraPath = "C:\Users\LabUser\Desktop\aitour-ILL344\infra"
 $setupLocal = Join-Path $localInfraPath "setup-knowledge.ps1"
 
 if (-not (Test-Path $setupLocal)) {
     Log "ERROR: Setup file not found at: $setupLocal"
     exit 1
 }
-
-$docsPath = "C:\Users\LabUser\Desktop\aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main\data\ai-search-data"
-[Environment]::SetEnvironmentVariable("LOCAL_DOCS_PATH", $docsPath, "Process")
 
 Log "Running setup-knowledge.ps1..."
 powershell -ExecutionPolicy Bypass -File $setupLocal `
@@ -193,13 +190,12 @@ $tenantId = "@lab.CloudSubscription.TenantId"
 $subscriptionId = "@lab.CloudSubscription.Id"
 
 Log "Logging in to Azure..."
-az login --service-principal -u $clientId -p $clientSecret --tenant $tenantId --skip-subscription-discovery
-az account set -s $subscriptionId --only-show-errors
+az login --service-principal -u $clientId -p $clientSecret --tenant $tenantId --subscription $subscriptionId --skip-subscription-discovery
 az config set core.only_show_errors=yes --only-show-errors
 az config set bicep.use_binary_from_path=false --only-show-errors
 
-$resourceGroupName = "@lab.CloudResourceGroup(LAB532Final-ResourceGroup).Name"
-$bicepFilePath = "C:\Users\LabUser\Desktop\aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main\infra\main.bicep"
+$resourceGroupName = "@lab.CloudResourceGroup(ILL344Final-ResourceGroup).Name"
+$bicepFilePath = "C:\Users\LabUser\Desktop\aitour-ILL344\infra\main.bicep"
 
 if (-not (Test-Path $bicepFilePath)) {
     Log "ERROR: Bicep file not found at: $bicepFilePath"

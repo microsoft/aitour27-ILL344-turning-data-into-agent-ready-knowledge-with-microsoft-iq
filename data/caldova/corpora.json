@@ -1,0 +1,45 @@
+{
+  "supplier-evidence": [
+    "pdfs/INV-SUP-001-2026-10.pdf",
+    "pdfs/INV-SUP-002-2026-10.pdf",
+    "pdfs/INV-SUP-003-2026-10.pdf",
+    "pdfs/INV-SUP-004-2026-10.pdf",
+    "pdfs/INV-SUP-005-2026-10.pdf",
+    "pdfs/INV-SUP-006-2026-10.pdf",
+    "pdfs/INV-SUP-007-2026-10.pdf",
+    "pdfs/INV-SUP-008-2026-10.pdf",
+    "pdfs/INV-SUP-009-2026-Q4.pdf",
+    "pdfs/INV-SUP-010-2026-10.pdf",
+    "pdfs/INV-SUP-011-2026-10.pdf",
+    "pdfs/INV-SUP-012-2026-10.pdf",
+    "pdfs/INV-SUP-013-2026-10.pdf",
+    "pdfs/INV-SUP-014-2026-10.pdf",
+    "pdfs/INV-SUP-015-2026-10.pdf",
+    "pdfs/TL-VCL-1026.pdf",
+    "pdfs/EXC-VC-1026-04.pdf",
+    "pdfs/YLD-MAW-1026.pdf",
+    "pdfs/YTA-MAW-1026-04.pdf",
+    "pdfs/FIR-KDA-1026.pdf",
+    "pdfs/NCR-KDA-1026-07.pdf",
+    "pdfs/UTL-BPB-1026.pdf",
+    "pdfs/DEV-BPB-1026.pdf",
+    "pdfs/COA-MD-1026-A.pdf",
+    "pdfs/GMP-INS-BPB-2027-01.pdf"
+  ],
+  "sourcing-documents": [
+    "pdfs/RFP-CAL-OSD-2026-01.pdf",
+    "pdfs/RSP-AST-2026-01.pdf",
+    "pdfs/RSP-SUM-2026-01.pdf",
+    "pdfs/RSP-ATL-2026-01.pdf",
+    "pdfs/MSA-CAL-AST-2024-011.pdf",
+    "pdfs/MSA-CAL-SUM-2024-017.pdf",
+    "pdfs/MSA-CAL-ATL-2025-004.pdf",
+    "pdfs/AMD-MSA-SUM-2026-01.pdf",
+    "pdfs/PO-CAL-SUM-2026-1108.pdf",
+    "pdfs/CAL-MAP-SUP-001.pdf",
+    "pdfs/CAL-MAP-EVD-001.pdf"
+  ],
+  "file-source": [
+    "pdfs/CAL-POL-PUR-001.pdf"
+  ]
+}

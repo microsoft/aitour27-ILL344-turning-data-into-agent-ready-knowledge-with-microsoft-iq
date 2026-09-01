@@ -9,14 +9,15 @@ python3 -m pip install -r src/notebooks/requirements.txt --quiet 2>/dev/null
 # Write .env and fetch API keys using azure-identity (no az CLI needed)
 python3 infra/setup-env.py
 
-# Create indexes and upload data
+# Restore the committed Caldova index snapshots
 echo "Running knowledge setup..."
 python3 infra/create-knowledge.py
 
-# Set up Fabric Lakehouse (if capacity was deployed)
-if [ -n "$FABRIC_CAPACITY_ID" ]; then
+# Set up Fabric when a workspace or capacity is configured
+if [ -n "$FABRIC_WORKSPACE_ID" ] || [ -n "$FABRIC_CAPACITY_ID" ]; then
     echo "Setting up Fabric Lakehouse..."
-    python3 infra/create-lakehouse.py
+    python3 infra/create-caldova-lakehouse.py
+    python3 infra/create-caldova-ontology.py
 fi
 
 # Note: Email seeding (seed-emails.ps1) requires a service principal with

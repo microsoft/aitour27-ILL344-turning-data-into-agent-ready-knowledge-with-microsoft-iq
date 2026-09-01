@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-    Sets up and runs the Fabric Lakehouse creation script for Zava DIY dataset.
+    Sets up the Caldova Fabric lakehouse and medicinal-product ontology.
 .DESCRIPTION
     Creates a Python virtual environment, installs dependencies, and runs
-    create-lakehouse.py to provision a Fabric Lakehouse with Zava DIY data.
+    the Caldova provisioners using an existing workspace or deployed capacity.
     
     This script follows the same pattern as setup-knowledge.ps1 in the
     ILL344 AI Tour infra folder and can be called from a postprovision hook.
@@ -12,30 +12,17 @@
     If not provided, a workspace will be auto-created using CapacityId.
 .PARAMETER CapacityId
     The Fabric capacity resource ID (from Bicep output). Used to auto-create a workspace.
-.PARAMETER LakehouseName
-    Name for the lakehouse (default: zava-diy-lakehouse).
-.PARAMETER OntologyName
-    Name for the Fabric IQ ontology (default: ZavaDIYOntology).
-.PARAMETER IncludeEmbeddings
-    If specified, includes vector embedding columns in the products table.
-.PARAMETER SkipOntology
-    If specified, skips Fabric IQ ontology creation.
 .PARAMETER TenantId
     Microsoft Entra tenant ID to use for Fabric and OneLake authentication.
 #>
 param(
     [string]$WorkspaceId = "",
     [string]$CapacityId = "",
-    [string]$LakehouseName = "ZavaDIYLakehouse",
-    [string]$WorkspaceName = "ZavaDIYWorkspace",
-    [string]$OntologyName = "ZavaDIYOntology",
     [string]$TenantId = "",
     [string]$ClientId = "",
     [string]$ClientSecret = "",
     [string]$LabUserUpn = "",
-    [string]$LabUserObjectId = "",
-    [switch]$IncludeEmbeddings,
-    [switch]$SkipOntology
+    [string]$LabUserObjectId = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -50,28 +37,9 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = $scriptDir
 
 Write-Output "==============================================" 
-Write-Output " Fabric Lakehouse Setup - Zava DIY Dataset"
+Write-Output " Caldova Fabric Lakehouse and Ontology Setup"
 Write-Output "=============================================="
 Write-Output ""
-
-# Create .env file
-$envContent = @"
-FABRIC_WORKSPACE_ID=$WorkspaceId
-FABRIC_CAPACITY_ID=$CapacityId
-FABRIC_WORKSPACE_NAME=$WorkspaceName
-LAKEHOUSE_NAME=$LakehouseName
-FABRIC_ONTOLOGY_NAME=$OntologyName
-FABRIC_TENANT_ID=$TenantId
-FABRIC_LAB_USER_UPN=$LabUserUpn
-FABRIC_LAB_USER_OID=$LabUserObjectId
-CREATE_ONTOLOGY=$(if ($SkipOntology) { "false" } else { "true" })
-INCLUDE_EMBEDDINGS=$(if ($IncludeEmbeddings) { "true" } else { "false" })
-"@
-
-$envPath = Join-Path $repoRoot ".env"
-$utf8NoBom = New-Object System.Text.UTF8Encoding $false
-[System.IO.File]::WriteAllText($envPath, $envContent, $utf8NoBom)
-Write-Output "Created .env file"
 
 # Find Python
 $pythonCmd = (Get-Command python -ErrorAction SilentlyContinue)
@@ -104,21 +72,31 @@ Write-Output "Installing Python dependencies..."
 & $venvPy -m pip install --upgrade pip --quiet 2>$null
 & $venvPy -m pip install -r $reqFile --quiet 2>$null
 
-# Run the lakehouse creation script
-$createScript = Join-Path $repoRoot "create-lakehouse.py"
-if (-not (Test-Path $createScript)) { throw "create-lakehouse.py not found at $createScript" }
-
-Write-Output "Running create-lakehouse.py..."
+Write-Output "Running Caldova Fabric provisioners..."
 Write-Output ""
 
 # Set env vars for DefaultAzureCredential (EnvironmentCredential)
 if ($ClientId) { [Environment]::SetEnvironmentVariable("AZURE_CLIENT_ID", $ClientId, "Process") }
 if ($ClientSecret) { [Environment]::SetEnvironmentVariable("AZURE_CLIENT_SECRET", $ClientSecret, "Process") }
 if ($TenantId) { [Environment]::SetEnvironmentVariable("AZURE_TENANT_ID", $TenantId, "Process") }
+if ($TenantId) { [Environment]::SetEnvironmentVariable("FABRIC_TENANT_ID", $TenantId, "Process") }
+if ($WorkspaceId) { [Environment]::SetEnvironmentVariable("FABRIC_WORKSPACE_ID", $WorkspaceId, "Process") }
+if ($CapacityId) { [Environment]::SetEnvironmentVariable("FABRIC_CAPACITY_ID", $CapacityId, "Process") }
+if ($LabUserUpn) { [Environment]::SetEnvironmentVariable("FABRIC_LAB_USER_UPN", $LabUserUpn, "Process") }
+if ($LabUserObjectId) { [Environment]::SetEnvironmentVariable("FABRIC_LAB_USER_OID", $LabUserObjectId, "Process") }
 
 Push-Location $repoRoot
-& $venvPy $createScript
+$lakehouseScript = Join-Path $repoRoot "create-caldova-lakehouse.py"
+$ontologyScript = Join-Path $repoRoot "create-caldova-ontology.py"
+if (-not (Test-Path $lakehouseScript)) { throw "create-caldova-lakehouse.py not found" }
+if (-not (Test-Path $ontologyScript)) { throw "create-caldova-ontology.py not found" }
+
+& $venvPy $lakehouseScript
 $exitCode = $LASTEXITCODE
+if ($exitCode -eq 0) {
+    & $venvPy $ontologyScript
+    $exitCode = $LASTEXITCODE
+}
 Pop-Location
 
 if ($exitCode -eq 0) {
@@ -126,6 +104,6 @@ if ($exitCode -eq 0) {
     Write-Output "Lakehouse and ontology setup completed successfully!"
 } else {
     Write-Output ""
-    Write-Output "ERROR: Lakehouse setup failed. Check create-lakehouse.log for details."
+    Write-Output "ERROR: Caldova Fabric setup failed. Review the output above for details."
     exit $exitCode
 }

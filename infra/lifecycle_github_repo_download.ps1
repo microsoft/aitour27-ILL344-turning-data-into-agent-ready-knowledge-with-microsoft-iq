@@ -1,10 +1,6 @@
-# ===========================================
-# Download GitHub Repo to Skillable Desktop
-# ===========================================
-
 # Set variables
 $token = "SECRET"
-$targetPath = "C:\Users\LabUser\Desktop\aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main"
+$targetPath = "C:\Users\LabUser\Desktop\aitour-ILL344"
 $tempZip = "$env:TEMP\repo.zip"
 
 # Download as ZIP using GitHub API

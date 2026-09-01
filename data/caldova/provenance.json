@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/pamelafox/aitour27-caldova-data",
+  "commit": "64236bbce2f48fad47051fe02576cc084d3cdbf1",
+  "source_manifest": "sample-data/corpora.json",
+  "fabric_sources": [
+    "sample-data/json/suppliers.json",
+    "sample-data/json/supplier-kpi-profiles.json",
+    "sample-data/json/medicinal-product-ontology.json",
+    "sample-data/json/waypoint-supplier-invoices.json"
+  ]
+}

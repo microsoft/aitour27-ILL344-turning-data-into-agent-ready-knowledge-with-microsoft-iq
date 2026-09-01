@@ -1,0 +1,170 @@
+{
+  "schema_version": "1.0",
+  "synthetic": true,
+  "history_end_date": "2026-08-17",
+  "snapshot_weeks": 105,
+  "profiles": [
+    {
+      "supplier_id": "sup-001",
+      "baseline": {"otif": 0.972, "batch_rejection": 0.008, "right_first_time": 0.981, "complaints_per_1k": 0.9, "utilization": 0.68, "lead_time_weeks": 14, "cost_index": 118, "tech_transfer_success": 1.0},
+      "static": {"experience_years": 22, "available_capacity_k_per_month": 850, "moq_k_units": 250, "regulatory_inspections_3yr": 3, "financial_rating": "A+"},
+      "inspection": "NAI",
+      "audit": "Outstanding",
+      "open_regulatory_actions": 0,
+      "trend": "stable"
+    },
+    {
+      "supplier_id": "sup-002",
+      "baseline": {"otif": 0.958, "batch_rejection": 0.011, "right_first_time": 0.974, "complaints_per_1k": 1.2, "utilization": 0.78, "lead_time_weeks": 16, "cost_index": 104, "tech_transfer_success": 0.94},
+      "static": {"experience_years": 15, "available_capacity_k_per_month": 520, "moq_k_units": 125, "regulatory_inspections_3yr": 2, "financial_rating": "A"},
+      "inspection": "VAI",
+      "audit": "Satisfactory",
+      "open_regulatory_actions": 0,
+      "trend": "improving"
+    },
+    {
+      "supplier_id": "sup-003",
+      "baseline": {"otif": 0.965, "batch_rejection": 0.014, "right_first_time": 0.962, "complaints_per_1k": 1.5, "utilization": 0.71, "lead_time_weeks": 10, "cost_index": 101, "tech_transfer_success": 0.92},
+      "static": {"experience_years": 11, "available_capacity_k_per_month": 380, "moq_k_units": 63, "regulatory_inspections_3yr": 2, "financial_rating": "B+"},
+      "inspection": "NAI",
+      "audit": "Satisfactory",
+      "open_regulatory_actions": 0,
+      "trend": "stable"
+    },
+    {
+      "supplier_id": "sup-004",
+      "baseline": {"otif": 0.949, "batch_rejection": 0.013, "right_first_time": 0.968, "complaints_per_1k": 1.4, "utilization": 0.82, "lead_time_weeks": 20, "cost_index": 107, "tech_transfer_success": 0.91},
+      "static": {"experience_years": 19, "available_capacity_k_per_month": 310, "moq_k_units": 100, "regulatory_inspections_3yr": 3, "financial_rating": "A-"},
+      "inspection": "VAI",
+      "audit": "Satisfactory",
+      "open_regulatory_actions": 0,
+      "trend": "stable"
+    },
+    {
+      "supplier_id": "sup-005",
+      "baseline": {"otif": 0.943, "batch_rejection": null, "right_first_time": null, "complaints_per_1k": 1.1, "utilization": 0.76, "lead_time_weeks": 6, "cost_index": 99, "tech_transfer_success": null},
+      "static": {"experience_years": null, "available_capacity_k_per_month": 180, "moq_k_units": null, "regulatory_inspections_3yr": 2, "financial_rating": "A"},
+      "inspection": "NAI",
+      "audit": "Outstanding",
+      "open_regulatory_actions": 0,
+      "trend": "improving"
+    },
+    {
+      "supplier_id": "sup-006",
+      "baseline": {"otif": 0.961, "batch_rejection": 0.009, "right_first_time": 0.979, "complaints_per_1k": 1.0, "utilization": 0.74, "lead_time_weeks": 15, "cost_index": 96, "tech_transfer_success": 0.96},
+      "static": {"experience_years": 18, "available_capacity_k_per_month": 600, "moq_k_units": 125, "regulatory_inspections_3yr": 3, "financial_rating": "A"},
+      "inspection": "NAI",
+      "audit": "Outstanding",
+      "open_regulatory_actions": 0,
+      "trend": "improving"
+    },
+    {
+      "supplier_id": "sup-007",
+      "baseline": {"otif": 0.951, "batch_rejection": null, "right_first_time": 0.971, "complaints_per_1k": 1.3, "utilization": 0.69, "lead_time_weeks": 8, "cost_index": 103, "tech_transfer_success": null},
+      "static": {"experience_years": null, "available_capacity_k_per_month": 220, "moq_k_units": null, "regulatory_inspections_3yr": 2, "financial_rating": "A-"},
+      "inspection": "NAI",
+      "audit": "Satisfactory",
+      "open_regulatory_actions": 0,
+      "trend": "stable"
+    },
+    {
+      "supplier_id": "sup-008",
+      "baseline": {"otif": 0.936, "batch_rejection": null, "right_first_time": null, "complaints_per_1k": 1.8, "utilization": 0.84, "lead_time_weeks": 3, "cost_index": 105, "tech_transfer_success": null},
+      "static": {"experience_years": null, "available_capacity_k_per_month": 140, "moq_k_units": null, "regulatory_inspections_3yr": 1, "financial_rating": "A-"},
+      "inspection": "VAI",
+      "audit": "Satisfactory",
+      "open_regulatory_actions": 0,
+      "trend": "declining"
+    },
+    {
+      "supplier_id": "sup-009",
+      "baseline": {"otif": 0.912, "batch_rejection": 0.021, "right_first_time": 0.948, "complaints_per_1k": 2.3, "utilization": 0.73, "lead_time_weeks": 24, "cost_index": 108, "tech_transfer_success": 0.86},
+      "static": {"experience_years": 14, "available_capacity_k_per_month": 650, "moq_k_units": 625, "regulatory_inspections_3yr": 2, "financial_rating": "A-"},
+      "inspection": "VAI",
+      "audit": "Requires Improvement",
+      "open_regulatory_actions": 0,
+      "trend": "declining"
+    },
+    {
+      "supplier_id": "sup-010",
+      "baseline": {"otif": 0.968, "batch_rejection": 0.007, "right_first_time": 0.983, "complaints_per_1k": 0.8, "utilization": 0.81, "lead_time_weeks": 12, "cost_index": 111, "tech_transfer_success": 0.95},
+      "static": {"experience_years": 17, "available_capacity_k_per_month": 290, "moq_k_units": 80, "regulatory_inspections_3yr": 2, "financial_rating": "A"},
+      "inspection": "NAI",
+      "audit": "Outstanding",
+      "open_regulatory_actions": 0,
+      "trend": "stable"
+    },
+    {
+      "supplier_id": "sup-011",
+      "baseline": {"otif": 0.956, "batch_rejection": null, "right_first_time": 0.976, "complaints_per_1k": 0.9, "utilization": 0.77, "lead_time_weeks": 7, "cost_index": 102, "tech_transfer_success": null},
+      "static": {"experience_years": null, "available_capacity_k_per_month": 250, "moq_k_units": null, "regulatory_inspections_3yr": 3, "financial_rating": "A"},
+      "inspection": "NAI",
+      "audit": "Outstanding",
+      "open_regulatory_actions": 0,
+      "trend": "improving"
+    },
+    {
+      "supplier_id": "sup-012",
+      "baseline": {"otif": 0.927, "batch_rejection": null, "right_first_time": 0.951, "complaints_per_1k": 1.7, "utilization": 0.72, "lead_time_weeks": 18, "cost_index": 109, "tech_transfer_success": 0.9},
+      "static": {"experience_years": null, "available_capacity_k_per_month": 160, "moq_k_units": null, "regulatory_inspections_3yr": 1, "financial_rating": "B+"},
+      "inspection": "VAI",
+      "audit": "Satisfactory",
+      "open_regulatory_actions": 0,
+      "trend": "stable"
+    },
+    {
+      "supplier_id": "sup-013",
+      "baseline": {"otif": 0.947, "batch_rejection": 0.012, "right_first_time": 0.966, "complaints_per_1k": 1.2, "utilization": 0.75, "lead_time_weeks": 11, "cost_index": 94, "tech_transfer_success": null},
+      "static": {"experience_years": 20, "available_capacity_k_per_month": 430, "moq_k_units": 50, "regulatory_inspections_3yr": 2, "financial_rating": "A-"},
+      "inspection": "NAI",
+      "audit": "Satisfactory",
+      "open_regulatory_actions": 0,
+      "trend": "stable"
+    },
+    {
+      "supplier_id": "sup-014",
+      "baseline": {"otif": 0.941, "batch_rejection": 0.018, "right_first_time": 0.955, "complaints_per_1k": 1.9, "utilization": 0.88, "lead_time_weeks": 10, "cost_index": 92, "tech_transfer_success": 0.89},
+      "static": {"experience_years": 18, "available_capacity_k_per_month": 340, "moq_k_units": 188, "regulatory_inspections_3yr": 2, "financial_rating": "B+"},
+      "inspection": "VAI",
+      "audit": "Satisfactory",
+      "open_regulatory_actions": 0,
+      "trend": "improving"
+    },
+    {
+      "supplier_id": "sup-015",
+      "baseline": {"otif": 0.932, "batch_rejection": null, "right_first_time": null, "complaints_per_1k": 1.0, "utilization": 0.7, "lead_time_weeks": 9, "cost_index": 106, "tech_transfer_success": null},
+      "static": {"experience_years": null, "available_capacity_k_per_month": 90, "moq_k_units": null, "regulatory_inspections_3yr": null, "financial_rating": "A-"},
+      "inspection": null,
+      "audit": "Satisfactory",
+      "open_regulatory_actions": 0,
+      "trend": "stable"
+    },
+    {
+      "supplier_id": "sup-016",
+      "baseline": {"otif": 0.957, "batch_rejection": 0.009, "right_first_time": 0.976, "complaints_per_1k": 1.0, "utilization": 0.71, "lead_time_weeks": 18, "cost_index": 98, "tech_transfer_success": 0.95},
+      "static": {"experience_years": 16, "available_capacity_k_per_month": 280, "moq_k_units": 75, "regulatory_inspections_3yr": 2, "financial_rating": "A"},
+      "inspection": "NAI",
+      "audit": "Outstanding",
+      "open_regulatory_actions": 0,
+      "trend": "improving"
+    },
+    {
+      "supplier_id": "sup-017",
+      "baseline": {"otif": 0.968, "batch_rejection": 0.007, "right_first_time": 0.982, "complaints_per_1k": 0.8, "utilization": 0.79, "lead_time_weeks": 17, "cost_index": 113, "tech_transfer_success": 0.97},
+      "static": {"experience_years": 27, "available_capacity_k_per_month": 240, "moq_k_units": 50, "regulatory_inspections_3yr": 4, "financial_rating": "A+"},
+      "inspection": "NAI",
+      "audit": "Outstanding",
+      "open_regulatory_actions": 0,
+      "trend": "stable"
+    },
+    {
+      "supplier_id": "sup-018",
+      "baseline": {"otif": 0.938, "batch_rejection": 0.016, "right_first_time": 0.959, "complaints_per_1k": 1.6, "utilization": 0.86, "lead_time_weeks": 22, "cost_index": 103, "tech_transfer_success": 0.89},
+      "static": {"experience_years": 12, "available_capacity_k_per_month": 360, "moq_k_units": 125, "regulatory_inspections_3yr": 2, "financial_rating": "B+"},
+      "inspection": "VAI",
+      "audit": "Requires Improvement",
+      "open_regulatory_actions": 0,
+      "trend": "declining"
+    }
+  ]
+}

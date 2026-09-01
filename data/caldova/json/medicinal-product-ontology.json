@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "synthetic": true,
+  "medicinal_products": [
+    {"product_id": "CALD-114", "name": "Neraval", "dosage_form": "Capsule", "strength": "20 mg", "route_of_administration": "Oral"},
+    {"product_id": "CALD-201", "name": "Caldovex", "dosage_form": "Tablet", "strength": "50 mg", "route_of_administration": "Oral"},
+    {"product_id": "CALD-305", "name": "Immunara", "dosage_form": "Solution for injection", "strength": "100 mg/mL", "route_of_administration": "Intravenous"},
+    {"product_id": "CALD-410", "name": "Respivane", "dosage_form": "Inhalation powder", "strength": "200 mcg", "route_of_administration": "Inhalation"},
+    {"product_id": "CALD-522", "name": "Dermalune", "dosage_form": "Cream", "strength": "1%", "route_of_administration": "Topical"},
+    {"product_id": "CALD-630", "name": "Glycora Duo", "dosage_form": "Tablet", "strength": "10 mg / 500 mg", "route_of_administration": "Oral"}
+  ],
+  "active_substances": [
+    {"substance_id": "SUB-001", "preferred_name": "Caldovexine", "substance_type": "Small molecule"},
+    {"substance_id": "SUB-002", "preferred_name": "Neravalate", "substance_type": "Small molecule"},
+    {"substance_id": "SUB-003", "preferred_name": "Immunarin", "substance_type": "Monoclonal antibody"},
+    {"substance_id": "SUB-004", "preferred_name": "Respivanol", "substance_type": "Small molecule"},
+    {"substance_id": "SUB-005", "preferred_name": "Dermalunide", "substance_type": "Small molecule"},
+    {"substance_id": "SUB-006", "preferred_name": "Glycoride", "substance_type": "Small molecule"},
+    {"substance_id": "SUB-007", "preferred_name": "Metabex", "substance_type": "Small molecule"}
+  ],
+  "regulatory_agencies": [
+    {"agency_id": "FDA", "name": "Food and Drug Administration", "abbreviation": "FDA", "country_or_region": "United States"},
+    {"agency_id": "EMA", "name": "European Medicines Agency", "abbreviation": "EMA", "country_or_region": "European Union"},
+    {"agency_id": "MHRA", "name": "Medicines and Healthcare products Regulatory Agency", "abbreviation": "MHRA", "country_or_region": "United Kingdom"}
+  ],
+  "marketing_authorizations": [
+    {"authorization_id": "AUTH-FDA-114", "authorization_number": "NDA-CALD-114-US", "product_id": "CALD-114", "agency_id": "FDA", "market": "United States", "status": "Active", "effective_date": "2024-03-18"},
+    {"authorization_id": "AUTH-EMA-114", "authorization_number": "EU-CALD-114-01", "product_id": "CALD-114", "agency_id": "EMA", "market": "European Union", "status": "Active", "effective_date": "2025-01-30"},
+    {"authorization_id": "AUTH-FDA-201", "authorization_number": "NDA-CALD-201-US", "product_id": "CALD-201", "agency_id": "FDA", "market": "United States", "status": "Active", "effective_date": "2023-06-12"},
+    {"authorization_id": "AUTH-EMA-201", "authorization_number": "EU-CALD-201-01", "product_id": "CALD-201", "agency_id": "EMA", "market": "European Union", "status": "Active", "effective_date": "2024-02-09"},
+    {"authorization_id": "AUTH-MHRA-201", "authorization_number": "PL-CALD-201-GB", "product_id": "CALD-201", "agency_id": "MHRA", "market": "United Kingdom", "status": "Active", "effective_date": "2024-05-21"},
+    {"authorization_id": "AUTH-FDA-305", "authorization_number": "BLA-CALD-305-US", "product_id": "CALD-305", "agency_id": "FDA", "market": "United States", "status": "Active", "effective_date": "2025-08-14"},
+    {"authorization_id": "AUTH-EMA-305", "authorization_number": "EU-CALD-305-01", "product_id": "CALD-305", "agency_id": "EMA", "market": "European Union", "status": "Pending", "effective_date": null},
+    {"authorization_id": "AUTH-MHRA-410", "authorization_number": "PL-CALD-410-GB", "product_id": "CALD-410", "agency_id": "MHRA", "market": "United Kingdom", "status": "Active", "effective_date": "2025-04-03"},
+    {"authorization_id": "AUTH-EMA-522", "authorization_number": "EU-CALD-522-01", "product_id": "CALD-522", "agency_id": "EMA", "market": "European Union", "status": "Active", "effective_date": "2026-02-17"},
+    {"authorization_id": "AUTH-FDA-630", "authorization_number": "NDA-CALD-630-US", "product_id": "CALD-630", "agency_id": "FDA", "market": "United States", "status": "Pending", "effective_date": null}
+  ],
+  "product_active_substances": [
+    {"product_id": "CALD-114", "substance_id": "SUB-002"},
+    {"product_id": "CALD-201", "substance_id": "SUB-001"},
+    {"product_id": "CALD-305", "substance_id": "SUB-003"},
+    {"product_id": "CALD-410", "substance_id": "SUB-004"},
+    {"product_id": "CALD-522", "substance_id": "SUB-005"},
+    {"product_id": "CALD-630", "substance_id": "SUB-006"},
+    {"product_id": "CALD-630", "substance_id": "SUB-007"}
+  ],
+  "manufacturer_active_substances": [
+    {"manufacturer_id": "sup-004", "substance_id": "SUB-001"},
+    {"manufacturer_id": "sup-004", "substance_id": "SUB-005"},
+    {"manufacturer_id": "sup-016", "substance_id": "SUB-002"},
+    {"manufacturer_id": "sup-016", "substance_id": "SUB-004"},
+    {"manufacturer_id": "sup-017", "substance_id": "SUB-001"},
+    {"manufacturer_id": "sup-017", "substance_id": "SUB-003"},
+    {"manufacturer_id": "sup-017", "substance_id": "SUB-006"},
+    {"manufacturer_id": "sup-018", "substance_id": "SUB-004"},
+    {"manufacturer_id": "sup-018", "substance_id": "SUB-005"},
+    {"manufacturer_id": "sup-018", "substance_id": "SUB-007"}
+  ]
+}

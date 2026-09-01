@@ -15,7 +15,7 @@ $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $env:PYTHONIOENCODING = "utf-8"
 
-$repoRoot = "C:\Users\LabUser\Desktop\aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main"
+$repoRoot = "C:\Users\LabUser\Desktop\aitour-ILL344"
 $knowledgeFolder = Join-Path $repoRoot "src\notebooks"
 $infraFolder = Join-Path $repoRoot "infra"
 
@@ -50,14 +50,6 @@ Write-Output "Created .env in repo root"
 # [System.IO.File]::WriteAllText($envPathNotebook, $envContent, $utf8NoBom)
 # Write-Output "Created .env in notebook folder"
 
-$docsPath = Join-Path $repoRoot "data\ai-search-data"
-if (-not (Test-Path $docsPath)) {
-    throw "Documents folder not found at $docsPath"
-}
-Write-Output "Using existing documents at: $docsPath"
-
-[System.Environment]::SetEnvironmentVariable("LOCAL_DOCS_PATH", $docsPath, "Process")
-
 $reqLocal = Join-Path $knowledgeFolder "requirements.txt"
 if (-not (Test-Path $reqLocal)) { 
     throw "requirements.txt not found at $reqLocal" 
@@ -88,7 +80,7 @@ Write-Output "Installing Python dependencies..."
 & $venvPy -m pip install --upgrade pip --no-python-version-warning
 & $venvPy -m pip install -r $reqLocal --no-cache-dir --disable-pip-version-check
 
-Write-Output "Uploading documents to blob storage..."
+Write-Output "Restoring pre-indexed Caldova data..."
 & $venvPy $pyLocal
 
 Pop-Location

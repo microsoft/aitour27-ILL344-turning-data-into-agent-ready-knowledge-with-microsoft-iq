@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0",
+  "synthetic": true,
+  "suppliers": [
+    {
+      "supplier_id": "sup-001",
+      "supplier_name": "Aster Ridge Biomanufacturing",
+      "service_category": "Drug product manufacturing",
+      "address_lines": ["250 Aster Ridge Way", "Research Triangle Park, NC 27709", "United States"]
+    },
+    {
+      "supplier_id": "sup-002",
+      "supplier_name": "Northstar Fill Finish",
+      "service_category": "Fill and finish",
+      "address_lines": ["18 Meridian Biopark", "Morrisville, NC 27560", "United States"]
+    },
+    {
+      "supplier_id": "sup-003",
+      "supplier_name": "HelioPack Pharma Services",
+      "service_category": "Packaging and serialization",
+      "address_lines": ["Havenstraat 42", "3011 Rotterdam", "Netherlands"]
+    },
+    {
+      "supplier_id": "sup-004",
+      "supplier_name": "Meridian API Works",
+      "service_category": "API manufacturing",
+      "address_lines": ["9 Tuas Biomedical Grove", "Singapore 637609", "Singapore"]
+    },
+    {
+      "supplier_id": "sup-005",
+      "supplier_name": "Crescent GMP Labs",
+      "service_category": "GMP laboratory services",
+      "address_lines": ["7800 Quality Center Drive", "Rockville, MD 20850", "United States"]
+    },
+    {
+      "supplier_id": "sup-006",
+      "supplier_name": "Summit Dose Manufacturing",
+      "service_category": "Drug product manufacturing",
+      "address_lines": ["Industriestrasse 18", "4056 Basel", "Switzerland"]
+    },
+    {
+      "supplier_id": "sup-007",
+      "supplier_name": "Orchid Clinical Supply",
+      "service_category": "Clinical supply services",
+      "address_lines": ["410 Trial Supply Lane", "Princeton, NJ 08540", "United States"]
+    },
+    {
+      "supplier_id": "sup-008",
+      "supplier_name": "Valence Cold Chain Logistics",
+      "service_category": "Cold chain logistics",
+      "address_lines": ["55 Global Cold Chain Plaza", "Memphis, TN 38118", "United States"]
+    },
+    {
+      "supplier_id": "sup-009",
+      "supplier_name": "BluePeak Biologics",
+      "service_category": "Biologics manufacturing",
+      "address_lines": ["1 Biologics Park", "Worcester, MA 01605", "United States"]
+    },
+    {
+      "supplier_id": "sup-010",
+      "supplier_name": "Keystone Device Assembly",
+      "service_category": "Combination device assembly",
+      "address_lines": ["3400 Assembly Road", "Minneapolis, MN 55413", "United States"]
+    },
+    {
+      "supplier_id": "sup-011",
+      "supplier_name": "LumaSterile Services",
+      "service_category": "Sterilization services",
+      "address_lines": ["Unit 6 Sterile Services Park", "Cork T12 K7F2", "Ireland"]
+    },
+    {
+      "supplier_id": "sup-012",
+      "supplier_name": "Pioneer Process Development",
+      "service_category": "Process development",
+      "address_lines": ["600 Innovation Campus Drive", "Durham, NC 27703", "United States"]
+    },
+    {
+      "supplier_id": "sup-013",
+      "supplier_name": "Evergreen Excipients",
+      "service_category": "Excipient supply",
+      "address_lines": ["12 Excipient Quay", "Dublin D02 X285", "Ireland"]
+    },
+    {
+      "supplier_id": "sup-014",
+      "supplier_name": "Atlas Regional Manufacturing",
+      "service_category": "Drug product manufacturing",
+      "address_lines": ["Av. Industrial 1450", "Campinas, SP 13069-901", "Brazil"]
+    },
+    {
+      "supplier_id": "sup-015",
+      "supplier_name": "Signal Ridge Regulatory Services",
+      "service_category": "Regulatory services",
+      "address_lines": ["200 Regulatory Row", "Bethesda, MD 20814", "United States"]
+    },
+    {
+      "supplier_id": "sup-016",
+      "supplier_name": "NovaCura API Sciences",
+      "service_category": "API manufacturing",
+      "address_lines": ["8 Genome Valley Road", "Hyderabad 500078", "India"]
+    },
+    {
+      "supplier_id": "sup-017",
+      "supplier_name": "Rheinwerk Pharma Ingredients",
+      "service_category": "API manufacturing",
+      "address_lines": ["14 Chempark Allee", "Leverkusen 51368", "Germany"]
+    },
+    {
+      "supplier_id": "sup-018",
+      "supplier_name": "Pacifica Active Ingredients",
+      "service_category": "API manufacturing",
+      "address_lines": ["27 Nakanoshima Science Way", "Osaka", "Japan"]
+    }
+  ]
+}

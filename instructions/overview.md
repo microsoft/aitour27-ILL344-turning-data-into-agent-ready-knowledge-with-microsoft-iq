@@ -40,13 +40,13 @@ In the virtual machine, sign into Windows using the following credentials:
 
 ### Access the lab repository
 
-Once signed in to the Skillable environment, you'll find the lab repository already cloned on your desktop under the folder: **Desktop > aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main**.
+Once signed in to the Skillable environment, you'll find the lab repository already cloned on your desktop under the folder: **Desktop > aitour-ILL344**.
 
 > This folder contains all the code, notebooks, and resources you'll need for the lab.
 
 ### Open the project folder in Visual Studio Code
 
-Open Visual Studio Code and select **File > Open Folder**. Then navigate to Desktop and select the **aitour27-ILL344-turning-data-into-agent-ready-knowledge-with-microsoft-iq-main** folder and then **Select Folder**.
+Open Visual Studio Code and select **File > Open Folder**. Then navigate to Desktop and select the **aitour-ILL344** folder and then **Select Folder**.
 
 > [!TIP]
 >
@@ -59,11 +59,11 @@ All required Azure services including **Foundry IQ (Azure AI Search) with pre-in
 <details>
 <summary><strong>📋 What's pre-configured (click to expand for details)</strong></summary>
 
-- **Foundry IQ (Azure AI Search)** - Standard tier with two pre-created indexes:
-  - **hrdocs:** HR policies, employee handbook, role library, company overview
-  - **healthdocs:** Health insurance plans, benefits options, coverage details
+- **Foundry IQ (Azure AI Search)** - Standard tier with two pre-created indexes
+- **supplier-evidence:** Supplier invoices, shipment evidence, and quality records
+- **sourcing-documents:** RFP responses, agreements, purchase orders, and sourcing diagrams
 - **Azure OpenAI** - Deployed models **gpt-5.4** for chat completion and answer synthesis and **text-embedding-3-large** for vector embeddings
-- **Pre-computed vectors** - All 384 document chunks are already vectorized and indexed
+- **Pre-computed vectors** - All Caldova document chunks are already vectorized and indexed
 
 </details>
 
@@ -92,11 +92,11 @@ Confirm that the search indexes have been created successfully:
 2. Sign in using your lab credentials:
     - **Username**: +++@lab.CloudPortalCredential(User1).Username+++  
     - **Temporary Access Pass**: +++@lab.CloudPortalCredential(User1).AccessToken+++
-3. In the Azure Portal search bar at the top, search for +++lab532-search+++ and select your AI Search service (it will look like *lab532-search-.....*).
+3. In the Azure Portal search bar at the top, search for +++ill344-search+++ and select your AI Search service (it will look like *ill344-search-.....*).
 4. In the left navigation menu, select **Search management** > **Indexes**.
 5. You should see two indexes:
-   - **hrdocs** - Should show document count of 50
-   - **healthdocs** - Should show document count of 334
+   - **supplier-evidence** - Should show a nonzero document count
+   - **sourcing-documents** - Should show a nonzero document count
 
 If your indexes are present and populated, your environment is ready to use. You can now proceed to start with the Jupyter notebooks.
 

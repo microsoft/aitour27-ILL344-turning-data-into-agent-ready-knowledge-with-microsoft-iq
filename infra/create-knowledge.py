@@ -1,6 +1,7 @@
 import os
 import asyncio
 import json
+import sys
 import traceback
 from datetime import datetime
 from pathlib import Path
@@ -42,7 +43,7 @@ async def restore_index(endpoint: str, index_name: str, index_file: str, records
             
             with open(index_file_path, "r", encoding="utf-8") as in_file:
                 index_data = json.load(in_file)
-                index = SearchIndex._deserialize(index_data, [])
+                index = SearchIndex(index_data)
                 index.name = index_name
                 index.vector_search.vectorizers[0].parameters.resource_url = azure_openai_endpoint
                 
@@ -54,35 +55,79 @@ async def restore_index(endpoint: str, index_name: str, index_file: str, records
         async with SearchClient(endpoint=endpoint, index_name=index_name, credential=credential) as client:
             records_file_path = os.path.join(default_path, records_file)
             log_message(f"[{index_name}] Reading documents from: {records_file_path}")
+
+            existing_results = await client.search(search_text="*", select=["chunk_id"])
+            existing_records = [
+                {"chunk_id": result["chunk_id"]} async for result in existing_results
+            ]
+            for offset in range(0, len(existing_records), 1000):
+                delete_results = await client.delete_documents(
+                    documents=existing_records[offset : offset + 1000]
+                )
+                failures = [result for result in delete_results if not result.succeeded]
+                if failures:
+                    raise RuntimeError(f"Failed to remove stale documents from {index_name}")
+            if existing_records:
+                log_message(
+                    f"[{index_name}] Removed {len(existing_records)} stale documents"
+                )
             
             records = []
+            expected_count = 0
             total_uploaded = 0
             batch_count = 0
+
+            async def upload_batch(batch):
+                nonlocal batch_count, total_uploaded
+                batch_count += 1
+                log_message(f"[{index_name}] Uploading batch #{batch_count} ({len(batch)} documents)...")
+                upload_results = await client.upload_documents(documents=batch)
+                failures = [result for result in upload_results if not result.succeeded]
+                if failures:
+                    details = ", ".join(
+                        f"{result.key}: {result.error_message}" for result in failures
+                    )
+                    raise RuntimeError(f"Document upload failed: {details}")
+                total_uploaded += len(upload_results)
             
             with open(records_file_path, "r", encoding="utf-8") as in_file:
                 for line_num, line in enumerate(in_file, 1):
                     try:
                         record = json.loads(line)
                         records.append(record)
+                        expected_count += 1
                         
                         if len(records) >= 100:
-                            batch_count += 1
-                            log_message(f"[{index_name}] Uploading batch #{batch_count} ({len(records)} documents)...")
-                            await client.upload_documents(documents=records)
-                            total_uploaded += len(records)
+                            await upload_batch(records)
                             records = []
                     except json.JSONDecodeError as e:
-                        log_message(f"[{index_name}] WARNING: Skipping invalid JSON on line {line_num}: {e}")
-                        continue
+                        raise ValueError(
+                            f"Invalid JSON in {records_file_path} on line {line_num}: {e}"
+                        ) from e
 
             # Upload remaining documents
             if records:
-                batch_count += 1
-                log_message(f"[{index_name}] Uploading final batch #{batch_count} ({len(records)} documents)...")
-                await client.upload_documents(documents=records)
-                total_uploaded += len(records)
+                await upload_batch(records)
+
+            if total_uploaded != expected_count:
+                raise RuntimeError(
+                    f"Uploaded {total_uploaded} documents, expected {expected_count}"
+                )
+            for _ in range(30):
+                restored_count = await client.get_document_count()
+                if restored_count == expected_count:
+                    break
+                await asyncio.sleep(2)
+            if restored_count != expected_count:
+                raise RuntimeError(
+                    f"Restored index contains {restored_count} documents, "
+                    f"expected {expected_count}"
+                )
         
-        log_message(f"[{index_name}] SUCCESS - Index restored! Total documents uploaded: {total_uploaded}")
+        log_message(
+            f"[{index_name}] SUCCESS - Index restored! "
+            f"Expected and uploaded documents: {total_uploaded}"
+        )
         print(f"Index {index_name} restored using {index_file} and {records_file}")
         return True
         
@@ -117,14 +162,14 @@ async def main():
     
     results = {}
     
-    # Restore hrdocs index
-    log_message("\n--- Processing hrdocs index ---")
-    results['hrdocs'] = await restore_index(
-        endpoint, 
-        "hrdocs", 
-        "index.json", 
-        "hrdocs-exported.jsonl", 
-        azure_openai_endpoint, 
+    # Restore supplier evidence index
+    log_message("\n--- Processing supplier-evidence index ---")
+    results['supplier-evidence'] = await restore_index(
+        endpoint,
+        "supplier-evidence",
+        "supplier-evidence-index.json",
+        "supplier-evidence-exported.jsonl",
+        azure_openai_endpoint,
         credential
     )
     
@@ -132,14 +177,14 @@ async def main():
     log_message("Waiting 3 seconds before processing next index...")
     await asyncio.sleep(3)
     
-    # Restore healthdocs index
-    log_message("\n--- Processing healthdocs index ---")
-    results['healthdocs'] = await restore_index(
-        endpoint, 
-        "healthdocs", 
-        "index.json", 
-        "healthdocs-exported.jsonl", 
-        azure_openai_endpoint, 
+    # Restore sourcing documents index
+    log_message("\n--- Processing sourcing-documents index ---")
+    results['sourcing-documents'] = await restore_index(
+        endpoint,
+        "sourcing-documents",
+        "sourcing-documents-index.json",
+        "sourcing-documents-exported.jsonl",
+        azure_openai_endpoint,
         credential
     )
     
@@ -172,6 +217,7 @@ async def main():
         log_message("  - Review detailed error messages above in this log file")
         
         print(f"\n Setup completed with errors. Check log file: {LOG_FILE}")
+        sys.exit(1)
     
     log_message("="*80)
     log_message("Script execution completed")

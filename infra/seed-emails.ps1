@@ -81,25 +81,8 @@ function Send-MailMessage {
 
 $emails = @(
     @{
-        subject      = "Urgent: Professional Claw Hammer out of stock at Seattle store"
-        from         = @{ emailAddress = @{ name = "Marcus Chen"; address = $UserUpn } }
-        toRecipients = @(
-            @{ emailAddress = @{ name = "Me"; address = $UserUpn } }
-        )
-        body         = @{
-            contentType = "HTML"
-            content     = @"
-<p>Hey,</p>
-<p>The store manager at <strong>Zava Retail Seattle</strong> says customers keep asking for the <strong>Professional Claw Hammer 16oz</strong> (SKU: HTHM001600) but the shelf has been empty for three days now. We've had at least six customer complaints this week alone.</p>
-<p>Can you check stock levels across our other stores and see if we can do a transfer? Seattle is our highest-traffic location and this is one of our best sellers &mdash; we can't afford to be out of stock heading into summer.</p>
-<p>If other stores are low too, we may need to escalate to procurement for an emergency reorder.</p>
-<p>Thanks,<br/>Marcus Chen<br/>Regional Operations Manager</p>
-"@
-        }
-    },
-    @{
-        subject      = "RE: Weekly inventory report - Seattle flagged"
-        from         = @{ emailAddress = @{ name = "Priya Sharma"; address = $UserUpn } }
+        subject      = "CALD-201 transfer checkpoint - equipment mapping approval needed"
+        from         = @{ emailAddress = @{ name = "Elena Morris"; address = $UserUpn } }
         toRecipients = @(
             @{ emailAddress = @{ name = "Me"; address = $UserUpn } }
         )
@@ -107,17 +90,33 @@ $emails = @(
             contentType = "HTML"
             content     = @"
 <p>Hi,</p>
-<p>Just following up on Marcus's note &mdash; I pulled the weekly inventory report and Seattle is showing <strong>zero stock</strong> on several hand tools, not just the claw hammer. The Professional Claw Hammer (HTHM001600) is the most requested one though.</p>
-<p>I checked Bellevue and Redmond and they seem to have some units. Could you verify the exact numbers in the system and coordinate a store-to-store transfer if the quantities allow?</p>
-<p>Also worth checking if Tacoma or Online have surplus &mdash; their seasonal demand is usually lower this time of year.</p>
-<p>Let me know if you need help with the transfer paperwork.</p>
-<p>Thanks,<br/>Priya Sharma<br/>Inventory Analyst</p>
+<p>Summit Dose has completed the controlled document intake for <strong>CALD-201</strong> and sent its draft equipment map. One action remains open: Caldova Process Engineering must approve the proposed high-shear granulator equivalency by <strong>4 February 2027</strong>.</p>
+<p>If we miss that approval date, Summit Dose says the engineering batch slot will move from 15 February to 1 March. That would put the 31 March technology-transfer package at risk.</p>
+<p>Owner: Daniel Cho, Process Engineering. Please confirm whether he can close the equivalency review this week.</p>
+<p>Thanks,<br/>Elena Morris<br/>Technology Transfer Lead</p>
 "@
         }
     },
     @{
-        subject      = "Customer escalation - hammer unavailable again"
-        from         = @{ emailAddress = @{ name = "Jordan Lee"; address = $UserUpn } }
+        subject      = "CALD-201 testing subcontractor - Piedmont evidence incomplete"
+        from         = @{ emailAddress = @{ name = "Noor Patel"; address = $UserUpn } }
+        toRecipients = @(
+            @{ emailAddress = @{ name = "Me"; address = $UserUpn } }
+        )
+        body         = @{
+            contentType = "HTML"
+            content     = @"
+<p>Hi,</p>
+<p>Supplier Quality reviewed Summit Dose's qualification package for <strong>Piedmont Analytical Services</strong>, the proposed compendial microbiology testing subcontractor for CALD-201.</p>
+<p>The package is still missing the closure evidence from Piedmont's 2026 data-integrity audit and the method-transfer validation summary. <strong>Caldova has not granted written subcontractor approval.</strong></p>
+<p>Summit Dose owes both documents by 3 February. Supplier Quality will make the approval decision at the 6 February review. Until then, no release testing may be assigned to Piedmont.</p>
+<p>Thanks,<br/>Noor Patel<br/>Supplier Quality Manager</p>
+"@
+        }
+    },
+    @{
+        subject      = "Decision Friday: protect the CALD-201 April delivery"
+        from         = @{ emailAddress = @{ name = "Luis Ortega"; address = $UserUpn } }
         toRecipients = @(
             @{ emailAddress = @{ name = "Me"; address = $UserUpn } }
         )
@@ -125,9 +124,10 @@ $emails = @(
             contentType = "HTML"
             content     = @"
 <p>Hi team,</p>
-<p>Got another customer complaint on the support line &mdash; a contractor needed 5 units of the Professional Claw Hammer 16oz for a job this weekend and was told Seattle is completely out. He's threatening to switch to Home Depot if we can't fulfill by Friday.</p>
-<p>This is the third escalation this week on the same SKU (HTHM001600). Can someone please check what's available across all stores and get a transfer or restock in motion ASAP?</p>
-<p>Thanks,<br/>Jordan Lee<br/>Customer Support Lead</p>
+<p>Summit Dose reported that planned coating-line maintenance now overlaps the <strong>CALD201-SD-PPQ-01</strong> window. They can still target the 30 April delivery if Caldova authorizes a reserved weekend coating slot by Friday.</p>
+<p>Without that slot, Summit Dose's current estimate moves PPQ-01 release to 12 May. The alternative would also require us to rephase PPQ-02.</p>
+<p>Thursday's supply review needs to decide whether to authorize the weekend slot or accept the delay and start formal change control. This email is a planning update, not an amendment to the approved purchase order.</p>
+<p>Thanks,<br/>Luis Ortega<br/>Supply Planning Director</p>
 "@
         }
     }
