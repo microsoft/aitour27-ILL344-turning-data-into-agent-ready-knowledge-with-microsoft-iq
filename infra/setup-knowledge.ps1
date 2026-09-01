@@ -34,6 +34,7 @@ AZURE_OPENAI_EMBEDDING_DEPLOYMENT=$EmbeddingDeployment
 
 # Tenant and project configuration
 AZURE_TENANT_ID=$TenantId
+MICROSOFT_FOUNDRY_PROJECT_ENDPOINT=$ProjectEndpoint
 
 # Fabric configuration (populated by lakehouse setup if capacity was deployed)
 FABRIC_CAPACITY_ID=$CapacityId

@@ -55,6 +55,7 @@ AZURE_OPENAI_EMBEDDING_DEPLOYMENT={os.environ['AZURE_OPENAI_EMBEDDING_DEPLOYMENT
 
 # Tenant and project configuration
 AZURE_TENANT_ID={os.environ['AZURE_TENANT_ID']}
+MICROSOFT_FOUNDRY_PROJECT_ENDPOINT={os.environ['MICROSOFT_FOUNDRY_PROJECT_ENDPOINT']}
 
 # Fabric configuration (populated by lakehouse setup if capacity was deployed)
 FABRIC_CAPACITY_ID={os.environ.get('FABRIC_CAPACITY_ID', '')}

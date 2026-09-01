@@ -21,14 +21,15 @@ To get the most out of this lab, you should have a basic understanding of the fo
 
 ## Get Started
 
-To begin, open the **src/notebooks/** folder and start with **part1-standard-foundry-iq-kb.ipynb**. Work through all 4 notebooks sequentially:
+To begin, open the **src/notebooks/** folder and start with **part1-standard-foundry-iq-kb.ipynb**. Work through all 5 notebooks sequentially:
 
 1. **part1-standard-foundry-iq-kb.ipynb**: Build a multi-source KB with the restored HR and health search indexes
 2. **part2-fabric-iq-to-kb.ipynb**: Add Fabric IQ through a Fabric Ontology knowledge source
 3. **part3-work-iq-to-kb.ipynb**: Add Work IQ as a first-party knowledge source
 4. **part4-work-iq-fabric-iq-to-kb.ipynb**: Combine Work IQ and Fabric IQ in one KB
+5. **part5-agent-framework-mcp.ipynb**: Build a Microsoft Agent Framework agent that uses the Part 1 knowledge base through MCP
 
-Once you've completed all 4 notebooks, return to this page and select **Next >** to view the wrap-up and summary section.
+Once you've completed all 5 notebooks, return to this page and select **Next >** to view the wrap-up and summary section.
 
 ## Discussions
 

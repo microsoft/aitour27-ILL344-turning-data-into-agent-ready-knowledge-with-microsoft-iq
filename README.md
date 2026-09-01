@@ -47,7 +47,7 @@ If you're following along during a live session:
 
 1. Open the lab environment and sign in with the provided credentials.
 2. Follow the setup guidance in [`instructions/overview.md`](instructions/overview.md).
-3. Open [`src/notebooks/`](src/notebooks/), start with [`part1-standard-foundry-iq-kb.ipynb`](src/notebooks/part1-standard-foundry-iq-kb.ipynb), and work through all four notebooks sequentially.
+3. Open [`src/notebooks/`](src/notebooks/), start with [`part1-standard-foundry-iq-kb.ipynb`](src/notebooks/part1-standard-foundry-iq-kb.ipynb), and work through all five notebooks sequentially.
 
 #### On your own
 
@@ -55,7 +55,7 @@ If you're learning at your own pace:
 
 1. Clone this repository.
 2. Provision the required resources by following the [self-deployment guide](deploy_yourself.md).
-3. Follow [`instructions/overview.md`](instructions/overview.md), then work through all four notebooks in [`src/notebooks/`](src/notebooks/) sequentially.
+3. Follow [`instructions/overview.md`](instructions/overview.md), then work through all five notebooks in [`src/notebooks/`](src/notebooks/) sequentially.
 
 ### 🎯 Learning outcomes
 

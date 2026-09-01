@@ -1,9 +1,12 @@
 aiohttp>=3.13.5
-azure-identity==1.25.2
+agent-framework-core>=1.10.0
+agent-framework-foundry>=1.10.0
+azure-identity==1.25.3
 azure-search-documents==12.1.0b1
 azure-storage-blob==12.30.0
 azure-storage-file-datalake==12.23.0
 ipykernel==7.2.0
+mcp>=1.24.0,<2
 microsoft-fabric-api>=0.1.0b20,<0.2
 pyarrow>=23,<24
 python-dotenv==1.2.2

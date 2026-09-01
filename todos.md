@@ -2,9 +2,8 @@
 
 * Update sample data for Work IQ and verify
 * Change Copilot CLI to GitHub Copilot App markdown
-* Add a part 5 that creates an agent using MAF agent - use a notebook, call agent.run, inspect results - can use deepdive agent
 * Update delivery-resources/README.md
-* Create slide deck based on Build 532 slides, remove Web IQ, add MAF, mention Breakout and LTG
+* Slide deck: Add MAF, mention Breakout and LTG
 
 ## Skillable
 
