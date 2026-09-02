@@ -410,7 +410,7 @@ resource fabricCapacity 'Microsoft.Fabric/capacities@2023-11-01' = if (deployFab
   name: '${resourcePrefix}fabric${uniqueSuffix}'
   location: location
   sku: {
-    name: 'F2'
+    name: 'F16'
     tier: 'Fabric'
   }
   properties: {

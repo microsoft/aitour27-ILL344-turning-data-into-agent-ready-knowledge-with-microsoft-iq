@@ -37,6 +37,18 @@ Log "SP Object ID: $spObjectId"
 
 $deploymentName = "deployment"
 
+# A Foundry account with project management has a backing AML workspace. Capture
+# failed account names before replacing the deployment so both tombstones can be purged.
+$foundryAccountNames = @()
+$previousFailedAccounts = az deployment operation group list `
+  --resource-group $resourceGroupName `
+  --name $deploymentName `
+  --query "[?properties.provisioningState=='Failed' && properties.targetResource.resourceType=='Microsoft.CognitiveServices/accounts'].properties.targetResource.resourceName" `
+  -o tsv 2>$null
+if ($LASTEXITCODE -eq 0 -and $previousFailedAccounts) {
+    $foundryAccountNames += @($previousFailedAccounts)
+}
+
 # Purge soft-deleted Cognitive Services accounts to prevent custom subdomain conflicts
 Log "Checking for soft-deleted Cognitive Services accounts..."
 $deletedJson = az cognitiveservices account list-deleted -o json 2>$null
@@ -44,10 +56,28 @@ if ($deletedJson -and $deletedJson -ne "[]") {
     $deletedAccounts = $deletedJson | ConvertFrom-Json
     foreach ($account in $deletedAccounts) {
         if ($account.name -like "ill344-foundry-*") {
+            $foundryAccountNames += $account.name
             Log "Purging soft-deleted Cognitive Services account: $($account.name) (location: $($account.location))"
             az cognitiveservices account purge --location $account.location --resource-group $resourceGroupName --name $account.name 2>&1 | Out-Null
             Log "Purged: $($account.name)"
         }
+    }
+}
+
+foreach ($accountName in ($foundryAccountNames | Where-Object { $_ -like "ill344-foundry-*" } | Sort-Object -Unique)) {
+    Log "Purging backing Azure ML workspace if soft-deleted: $accountName"
+    $amlPurgeOutput = az ml workspace delete `
+      --resource-group $resourceGroupName `
+      --name $accountName `
+      --permanently-delete `
+      --yes `
+      --only-show-errors 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        Log "Purged backing Azure ML workspace: $accountName"
+    } elseif ($amlPurgeOutput -match "not found|ResourceNotFound") {
+        Log "No backing Azure ML workspace tombstone found for: $accountName"
+    } else {
+        Log "WARNING: Could not purge backing Azure ML workspace $accountName`: $amlPurgeOutput"
     }
 }
 
