@@ -1,18 +1,19 @@
-# Before you begin
+@lab.Title
+## Before you begin
 
 <details>
 <summary><strong>🔑 Lab credentials (click to expand when you need to sign in)</strong></summary>
 
 At any point during the lab, if you need to sign in to the virtual machine (Windows) or any Azure or Microsoft 365 apps (M365 Copilot, SharePoint, Teams, and so on), use the credentials provided below.
 
-## Sign into virtual machine (Windows)
+### Sign into virtual machine (Windows)
 
 If you need to sign in the virtual machine, use the following credentials:
 
 - **User name**: +++@lab.VirtualMachine(Win11-Pro-Base).Username+++  
 - **Password**: +++@lab.VirtualMachine(Win11-Pro-Base).Password+++
 
-## Sign into Azure & Microsoft 365
+### Sign into Azure & Microsoft 365
 
 If you need to sign in to any Azure or Microsoft 365 apps, use the following credentials:
 
@@ -25,7 +26,7 @@ If you need to sign in to any Azure or Microsoft 365 apps, use the following cre
 
 In this hands-on lab, you'll build a Foundry IQ (Azure AI Search) knowledge base using agentic retrieval and extend it with Fabric IQ and Work IQ knowledge sources. You'll connect the knowledge base to indexed enterprise content, structured operational data, and workplace context for grounded, citation-backed answers across multiple systems.
 
-Through 4 progressive notebook exercises, you'll build a multi-source document-backed knowledge base, add Fabric IQ and Work IQ, and finish by combining Work IQ and Fabric IQ in one KB. By the end, you'll have flexible agentic knowledge bases that blend multiple source types.
+Through 5 progressive notebook exercises, you'll build a multi-source document-backed knowledge base, add Fabric IQ and Work IQ, combine Work IQ and Fabric IQ in one KB, and build an Agent Framework agent over retrieved evidence. By the end, you'll have flexible agentic knowledge bases that blend multiple source types and support grounded agent experiences.
 
 ## Getting started
 
@@ -50,7 +51,7 @@ Open Visual Studio Code and select **File > Open Folder**. Then navigate to Desk
 
 > [!TIP]
 >
-> - When prompted whether to trust the authors of the files, select **Yes, I trust the authors**.
+> When prompted whether to trust the authors of the files, select **Yes, I trust the authors**.
 
 ### Verify the environment setup
 
@@ -102,16 +103,17 @@ If your indexes are present and populated, your environment is ready to use. You
 
 ### Work through the Jupyter notebooks
 
-This lab includes 4 progressive notebooks covering different knowledge base and source type patterns:
+This lab includes 5 progressive notebooks covering different knowledge base, source type, and agent patterns:
 
 1. **Multi-source search indexes** - Build a knowledge base over those search indexes plus an uploaded file
 2. **Fabric IQ source** - Add Fabric IQ through a Fabric Ontology knowledge source
 3. **Work IQ source** - Bring Work IQ into the KB as a first-party source, authenticated based on your user login
 4. **Work IQ + Fabric IQ** - Combine workplace data and structured Fabric data in one knowledge base
+5. **Agent Framework + MCP** - Build an agent that retrieves evidence from an extractive knowledge base through its MCP endpoint
 
 Start with **part1-standard-foundry-iq-kb.ipynb** in the **src/notebooks/** folder and progress through each notebook sequentially.
 
 > [!TIP]
-> **Bonus: Copilot CLI sidequest** - Part 1 includes a bonus section that prints an MCP configuration for the knowledge base you created. Follow the instructions in **src/notebooks/copilot-cli-sidequest.md** to add it to GitHub Copilot CLI and query your KB directly from the terminal.
+> **Bonus: GitHub Copilot App sidequest** - Part 1 includes a bonus section that prints an MCP URL for the knowledge base you created. Follow the instructions in **src/notebooks/copilot-app-sidequest.md** to add it to GitHub Copilot App and query your KB directly from the app.
 
-Once you've completed all 4 notebooks, select **Next** to review key takeaways and next steps.
+Once you've completed all 5 notebooks, select **Next** to review key takeaways and next steps.

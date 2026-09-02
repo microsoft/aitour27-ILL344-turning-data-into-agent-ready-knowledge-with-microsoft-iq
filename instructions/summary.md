@@ -1,3 +1,4 @@
+===
 # Summary
 
 You've completed the lab on building agentic knowledge bases with Foundry IQ (Azure AI Search) and multiple source types. Through 4 progressive notebooks, you built a multi-source document-backed KB, added Fabric IQ and Work IQ, and combined Work IQ with Fabric IQ.
