@@ -31,3 +31,13 @@ foreach ($deleted in $deletedAccounts) {
     Remove-AzResource -ResourceId $deleted.ResourceId -ApiVersion 2024-10-01 -Force
     Write-Output "Purged soft-deleted account: $($deleted.Name)"
 }
+
+# Purge the backing Azure ML workspace created for Foundry project management.
+foreach ($account in ($AIObjs | Where-Object { $_.Name -like "ill344-foundry-*" })) {
+    Remove-AzMLWorkspace `
+        -ResourceGroupName $account.ResourceGroupName `
+        -Name $account.Name `
+        -ForceToPurge `
+        -Confirm:$false
+    Write-Output "Purged backing Azure ML workspace: $($account.Name)"
+}

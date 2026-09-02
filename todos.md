@@ -3,7 +3,6 @@
 * Update sample data for Work IQ and verify
 * Change Copilot CLI to GitHub Copilot App markdown
 * Update delivery-resources/README.md
-* Slide deck: Add MAF, mention Breakout and LTG
 * Delete Build26-Lab532-main from Desktop
 * Remove .devcontainer? (To avoid VS Code popup)
 * VS Code is showing settings when it starts up, and isnt showing the trust-folder popup

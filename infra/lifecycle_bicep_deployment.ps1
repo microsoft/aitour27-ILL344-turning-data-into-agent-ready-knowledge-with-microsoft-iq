@@ -40,6 +40,25 @@ $deploymentName = "deployment"
 # A Foundry account with project management has a backing AML workspace. Capture
 # failed account names before replacing the deployment so both tombstones can be purged.
 $foundryAccountNames = @()
+$whatIfJson = az deployment group what-if `
+    --resource-group $resourceGroupName `
+    --template-file $bicepFilePath `
+    --parameters principalId="$labUserObjectId" `
+    --parameters fabricAdminUpn="$labUserUpn" `
+    --parameters spPrincipalId="$spObjectId" `
+    --parameters location="swedencentral" `
+    --validation-level Template `
+    --result-format ResourceIdOnly `
+    --no-pretty-print -o json 2>$null
+if ($LASTEXITCODE -eq 0 -and $whatIfJson) {
+        $whatIfResult = $whatIfJson | ConvertFrom-Json
+        $whatIfChanges = if ($whatIfResult.properties.changes) { $whatIfResult.properties.changes } else { $whatIfResult.changes }
+        foreach ($change in $whatIfChanges) {
+                if ($change.resourceId -match "/Microsoft\.CognitiveServices/accounts/(ill344-foundry-[^/]+)$") {
+                        $foundryAccountNames += $Matches[1]
+                }
+        }
+}
 $previousFailedAccounts = az deployment operation group list `
   --resource-group $resourceGroupName `
   --name $deploymentName `
