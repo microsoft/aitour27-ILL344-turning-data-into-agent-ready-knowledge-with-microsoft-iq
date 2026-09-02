@@ -805,7 +805,7 @@ def deploy(tables: dict[str, pa.Table]) -> None:
                     display_name=LAKEHOUSE_NAME,
                     description="Synthetic supplier performance analytics for Caldova.",
                 ),
-            ).result()
+            ).result
         else:
             print(f"Reusing lakehouse '{LAKEHOUSE_NAME}'.")
 
