@@ -28,7 +28,7 @@ from microsoft_fabric_api import FabricClient  # noqa: E402
 from microsoft_fabric_api.generated.core.models import (  # noqa: E402
     AddWorkspaceRoleAssignmentRequest,
     CreateWorkspaceRequest,
-    Principal,
+    UserPrincipal,
 )
 from microsoft_fabric_api.generated.lakehouse.models import (  # noqa: E402
     CreateLakehouseRequest,
@@ -257,7 +257,7 @@ def add_lab_user(client: FabricClient, workspace_id: str) -> None:
         client.core.workspaces.add_workspace_role_assignment(
             workspace_id,
             AddWorkspaceRoleAssignmentRequest(
-                principal=Principal(id=user_id, type="User"),
+                principal=UserPrincipal(id=user_id),
                 role="Admin",
             ),
         )

@@ -5,7 +5,8 @@
 * Update delivery-resources/README.md
 * Slide deck: Add MAF, mention Breakout and LTG
 * Delete Build26-Lab532-main from Desktop
-* Remove .devcontainer?
+* Remove .devcontainer? (To avoid VS Code popup)
+* VS Code is showing settings when it starts up, and isnt showing the trust-folder popup
 * Update sidebar instructions
 
 ## Skillable
