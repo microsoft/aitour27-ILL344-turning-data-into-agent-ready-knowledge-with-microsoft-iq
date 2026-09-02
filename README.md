@@ -68,7 +68,7 @@ By the end of this session, you will be able to:
 ### 💻 Technologies used
 
 - Foundry IQ (Azure AI Search)
-- Azure OpenAI (`gpt-5.4-mini` and `text-embedding-3-large`)
+- Azure OpenAI (`gpt-5.4` and `text-embedding-3-large`)
 - Model Context Protocol (MCP)
 - Microsoft Fabric IQ and Work IQ
 - Python and Jupyter Notebooks

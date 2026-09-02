@@ -36,69 +36,7 @@ $spObjectId = az ad sp show --id $clientId --query id -o tsv
 Log "SP Object ID: $spObjectId"
 
 $deploymentName = "deployment"
-
-# A Foundry account with project management has a backing AML workspace. Capture
-# failed account names before replacing the deployment so both tombstones can be purged.
-$foundryAccountNames = @()
-$whatIfJson = az deployment group what-if `
-    --resource-group $resourceGroupName `
-    --template-file $bicepFilePath `
-    --parameters principalId="$labUserObjectId" `
-    --parameters fabricAdminUpn="$labUserUpn" `
-    --parameters spPrincipalId="$spObjectId" `
-    --parameters location="swedencentral" `
-    --validation-level Template `
-    --result-format ResourceIdOnly `
-    --no-pretty-print -o json 2>$null
-if ($LASTEXITCODE -eq 0 -and $whatIfJson) {
-        $whatIfResult = $whatIfJson | ConvertFrom-Json
-        $whatIfChanges = if ($whatIfResult.properties.changes) { $whatIfResult.properties.changes } else { $whatIfResult.changes }
-        foreach ($change in $whatIfChanges) {
-                if ($change.resourceId -match "/Microsoft\.CognitiveServices/accounts/(ill344-foundry-[^/]+)$") {
-                        $foundryAccountNames += $Matches[1]
-                }
-        }
-}
-$previousFailedAccounts = az deployment operation group list `
-  --resource-group $resourceGroupName `
-  --name $deploymentName `
-  --query "[?properties.provisioningState=='Failed' && properties.targetResource.resourceType=='Microsoft.CognitiveServices/accounts'].properties.targetResource.resourceName" `
-  -o tsv 2>$null
-if ($LASTEXITCODE -eq 0 -and $previousFailedAccounts) {
-    $foundryAccountNames += @($previousFailedAccounts)
-}
-
-# Purge soft-deleted Cognitive Services accounts to prevent custom subdomain conflicts
-Log "Checking for soft-deleted Cognitive Services accounts..."
-$deletedJson = az cognitiveservices account list-deleted -o json 2>$null
-if ($deletedJson -and $deletedJson -ne "[]") {
-    $deletedAccounts = $deletedJson | ConvertFrom-Json
-    foreach ($account in $deletedAccounts) {
-        if ($account.name -like "ill344-foundry-*") {
-            $foundryAccountNames += $account.name
-            Log "Purging soft-deleted Cognitive Services account: $($account.name) (location: $($account.location))"
-            az cognitiveservices account purge --location $account.location --resource-group $resourceGroupName --name $account.name 2>&1 | Out-Null
-            Log "Purged: $($account.name)"
-        }
-    }
-}
-
-foreach ($accountName in ($foundryAccountNames | Where-Object { $_ -like "ill344-foundry-*" } | Sort-Object -Unique)) {
-    Log "Purging backing Azure ML workspace if soft-deleted: $accountName"
-    $amlPurgeOutput = az ml workspace delete `
-      --resource-group $resourceGroupName `
-      --name $accountName `
-      --permanently-delete `
-      --yes `
-      --only-show-errors 2>&1
-    if ($LASTEXITCODE -eq 0) {
-        Log "Purged backing Azure ML workspace: $accountName"
-    } elseif ($amlPurgeOutput -match "not found|ResourceNotFound") {
-        Log "No backing Azure ML workspace tombstone found for: $accountName"
-    } else {
-        Log "WARNING: Could not purge backing Azure ML workspace $accountName`: $amlPurgeOutput"
-    }
-}
+$foundryDeploymentSuffix = [Guid]::NewGuid().ToString("N").Substring(0, 8)
 
 Log "Starting Bicep deployment..."
 $deploymentOutput = az deployment group create `
@@ -108,6 +46,7 @@ $deploymentOutput = az deployment group create `
   --parameters principalId="$labUserObjectId" `
   --parameters fabricAdminUpn="$labUserUpn" `
   --parameters spPrincipalId="$spObjectId" `
+  --parameters foundryDeploymentSuffix="$foundryDeploymentSuffix" `
   --parameters location="swedencentral" `
   --query properties.outputs -o json 2>&1
 $deployExitCode = $LASTEXITCODE

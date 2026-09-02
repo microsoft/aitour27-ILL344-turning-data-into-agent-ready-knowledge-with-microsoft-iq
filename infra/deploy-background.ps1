@@ -28,20 +28,7 @@ $spObjectId = az ad sp show --id $clientId --query id -o tsv
 Log "SP Object ID: $spObjectId"
 
 $deploymentName = "deployment"
-
-# Purge soft-deleted Cognitive Services accounts to prevent custom subdomain conflicts
-Log "Checking for soft-deleted Cognitive Services accounts..."
-$deletedJson = az cognitiveservices account list-deleted -o json 2>$null
-if ($deletedJson -and $deletedJson -ne "[]") {
-    $deletedAccounts = $deletedJson | ConvertFrom-Json
-    foreach ($account in $deletedAccounts) {
-  if ($account.name -like "ill344-foundry-*") {
-            Log "Purging soft-deleted Cognitive Services account: $($account.name) (location: $($account.location))"
-            az cognitiveservices account purge --location $account.location --resource-group $resourceGroupName --name $account.name 2>&1 | Out-Null
-            Log "Purged: $($account.name)"
-        }
-    }
-}
+$foundryDeploymentSuffix = [Guid]::NewGuid().ToString("N").Substring(0, 8)
 
 Log "Starting Bicep deployment..."
 $deploymentOutput = az deployment group create `
@@ -51,6 +38,7 @@ $deploymentOutput = az deployment group create `
   --parameters principalId="$labUserObjectId" `
   --parameters fabricAdminUpn="$labUserUpn" `
   --parameters spPrincipalId="$spObjectId" `
+  --parameters foundryDeploymentSuffix="$foundryDeploymentSuffix" `
   --parameters location="eastus2" `
   --query properties.outputs -o json 2>&1
 $deployExitCode = $LASTEXITCODE

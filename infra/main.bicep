@@ -21,6 +21,9 @@ param spPrincipalId string = ''
 @description('The name prefix for all resources')
 param resourcePrefix string = 'ill344'
 
+@description('Unique suffix for Foundry resources')
+param foundryDeploymentSuffix string = ''
+
 @description('The location where all resources will be deployed')
 param location string
 
@@ -55,12 +58,13 @@ param llmModelCapacity int = 50
 
 // Variables for resource naming and configuration
 var uniqueSuffix = uniqueString(resourceGroup().id)
+var foundrySuffix = empty(foundryDeploymentSuffix) ? uniqueSuffix : '${uniqueSuffix}-${foundryDeploymentSuffix}'
 var resourceNames = {
   searchService: '${resourcePrefix}-search-${uniqueSuffix}'
   searchIndex: '${resourcePrefix}-index'
   indexingStorage: take(toLower(replace('${resourcePrefix}idx${uniqueSuffix}', '-', '')), 24)
-  microsoftFoundry: '${resourcePrefix}-foundry-${uniqueSuffix}'
-  microsoftFoundryProject: '${resourcePrefix}-project-${uniqueSuffix}'
+  microsoftFoundry: '${resourcePrefix}-foundry-${foundrySuffix}'
+  microsoftFoundryProject: '${resourcePrefix}-project-${foundrySuffix}'
   embeddingDeployment: 'text-embedding-3-large'
   llmDeployment: 'gpt-5.4'
 }
