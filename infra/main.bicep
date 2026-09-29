@@ -276,6 +276,10 @@ resource microsoftFoundryProject 'Microsoft.CognitiveServices/accounts/projects@
     type: 'SystemAssigned'
   }
   properties: {}
+  // Cognitive Services rejects concurrent child-resource operations on the same account.
+  dependsOn: [
+    llmModelDeployment
+  ]
 }
 
 // Search Index Data Reader role for the Foundry project managed identity.
