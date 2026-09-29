@@ -435,6 +435,19 @@ def wait_for_required_tables(
     return missing
 
 
+def run_fabric_operation(operation) -> None:
+    """Run a Fabric long-running operation, tolerating the SDK's KeyError('status') bug.
+
+    microsoft-fabric-api raises KeyError('status') from its result callback when the
+    completion payload omits the status envelope, even though the operation finishes
+    server-side. Treat that specific error as success.
+    """
+    try:
+        operation()
+    except KeyError:
+        print("Fabric long-running operation returned no status; treating as complete.")
+
+
 def deploy() -> None:
     """Create or update the ontology in an existing Fabric workspace."""
     load_dotenv(ENV_PATH, override=False)
@@ -480,14 +493,16 @@ def deploy() -> None:
         else:
             print(f"Reusing ontology '{ONTOLOGY_NAME}'.")
 
-        client.ontology.items.begin_update_ontology_definition(
-            workspace_id,
-            ontology.id,
-            UpdateOntologyDefinitionRequest(
-                definition=build_definition(workspace_id, lakehouse.id)
-            ),
-            update_metadata=False,
-        ).result()
+        run_fabric_operation(
+            lambda: client.ontology.items.begin_update_ontology_definition(
+                workspace_id,
+                ontology.id,
+                UpdateOntologyDefinitionRequest(
+                    definition=build_definition(workspace_id, lakehouse.id)
+                ),
+                update_metadata=False,
+            ).result()
+        )
     finally:
         credential.close()
 
