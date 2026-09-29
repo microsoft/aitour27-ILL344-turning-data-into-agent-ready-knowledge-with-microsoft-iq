@@ -38,6 +38,11 @@ Log "SP Object ID: $spObjectId"
 $deploymentName = "deployment"
 $foundryDeploymentSuffix = [Guid]::NewGuid().ToString("N").Substring(0, 8)
 
+$deploymentId = "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Resources/deployments/$deploymentName"
+$portalDeploymentLink = "https://portal.azure.com/#view/HubsExtension/DeploymentDetailsBlade/~/overview/id/" + [uri]::EscapeDataString($deploymentId)
+Log "Track deployment progress in the Azure Portal:"
+Log $portalDeploymentLink
+
 Log "Starting Bicep deployment..."
 $deploymentOutput = az deployment group create `
   --name $deploymentName `
