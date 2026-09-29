@@ -154,4 +154,18 @@ if (Test-Path $seedEmails) {
     Log "Email seeding complete"
 }
 
+# Provision the per-lab Work IQ Entra app and federated credential (non-fatal).
+# Requires the provisioning service principal to have Microsoft Graph rights to create app
+# registrations and grant WorkIQAgent.Ask admin consent. Parts 3 and 4 require this step.
+$env:AZURE_CLIENT_ID = $clientId
+$env:AZURE_CLIENT_SECRET = $clientSecret
+$env:AZURE_TENANT_ID = $tenantId
+$env:SEARCH_SERVICE_PRINCIPAL_ID = $outs.SEARCH_SERVICE_PRINCIPAL_ID.value
+$env:AZURE_SEARCH_SERVICE_NAME = $searchName
+Log "Provisioning Work IQ Entra app..."
+python (Join-Path $localInfraPath "create-workiq-entra.py") --apply 2>&1 | Tee-Object -FilePath $logFile -Append
+if ($LASTEXITCODE -ne 0) {
+    Log "WARN: Work IQ Entra setup was skipped or failed. Parts 3 and 4 require it."
+}
+
 Log "=== Background deploy script completed ==="
