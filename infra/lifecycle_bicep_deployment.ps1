@@ -47,7 +47,7 @@ $deploymentOutput = az deployment group create `
   --parameters fabricAdminUpn="$labUserUpn" `
   --parameters spPrincipalId="$spObjectId" `
   --parameters foundryDeploymentSuffix="$foundryDeploymentSuffix" `
-  --parameters location="swedencentral" `
+  --parameters location="westus3" `
   --query properties.outputs -o json 2>&1
 $deployExitCode = $LASTEXITCODE
 
