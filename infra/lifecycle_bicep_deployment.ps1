@@ -136,7 +136,12 @@ if ($fabricCapacityId) {
             -ClientSecret $clientSecret `
             -LabUserUpn $labUserUpn `
             -LabUserObjectId $labUserObjectId *>> $logFile
-        Log "Fabric Lakehouse setup complete"
+        $fabricExit = $LASTEXITCODE
+        if ($fabricExit -eq 0) {
+            Log "Fabric Lakehouse setup complete"
+        } else {
+            Log "ERROR: Fabric Lakehouse setup FAILED (exit $fabricExit). Parts 2 and 4 require Fabric IQ."
+        }
     } else {
         Log "WARNING: setup-lakehouse.ps1 not found, skipping lakehouse"
     }
