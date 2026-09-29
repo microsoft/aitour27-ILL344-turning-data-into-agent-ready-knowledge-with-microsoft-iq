@@ -27,6 +27,9 @@ param foundryDeploymentSuffix string = ''
 @description('The location where all resources will be deployed')
 param location string
 
+@description('The location for the Microsoft Fabric capacity. Defaults to the main location. Override when Fabric capacity quota is unavailable in the main region.')
+param fabricLocation string = location
+
 @description('AI Search service SKU')
 @allowed(['basic', 'standard', 'standard2', 'standard3', 'storage_optimized_l1', 'storage_optimized_l2'])
 param searchServiceSku string = 'standard'
@@ -416,7 +419,7 @@ output AZURE_OPENAI_CHATGPT_DEPLOYMENT string = llmModelDeployment.name
 @description('Microsoft Fabric capacity for lakehouse workloads')
 resource fabricCapacity 'Microsoft.Fabric/capacities@2023-11-01' = if (deployFabricCapacity) {
   name: '${resourcePrefix}fabric${uniqueSuffix}'
-  location: location
+  location: fabricLocation
   sku: {
     name: 'F16'
     tier: 'Fabric'
