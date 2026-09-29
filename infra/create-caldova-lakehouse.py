@@ -16,6 +16,7 @@ from typing import Any
 
 import pyarrow as pa
 import pyarrow.parquet as pq
+import requests
 from azure.core.credentials import TokenCredential
 from azure.core.exceptions import HttpResponseError
 from azure.identity import AzureDeveloperCliCredential, DefaultAzureCredential
@@ -248,10 +249,39 @@ def resolve_workspace(client: FabricClient) -> str:
     return workspace.id
 
 
-def add_lab_user(client: FabricClient, workspace_id: str) -> None:
-    """Grant the Skillable attendee access to the service-principal-owned workspace."""
+def resolve_lab_user_oid(credential: TokenCredential) -> str:
+    """Return the lab user's Entra object ID, resolving it from the UPN when only that is set."""
     user_id = os.getenv("FABRIC_LAB_USER_OID", "").strip()
+    if user_id:
+        return user_id
+    upn = os.getenv("FABRIC_LAB_USER_UPN", "").strip()
+    if not upn:
+        return ""
+    token = credential.get_token("https://graph.microsoft.com/.default").token
+    response = requests.get(
+        f"https://graph.microsoft.com/v1.0/users/{upn}",
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=60,
+    )
+    if response.status_code == 200:
+        return response.json().get("id", "").strip()
+    print(
+        f"WARNING: could not resolve lab user '{upn}' via Microsoft Graph "
+        f"({response.status_code}). The service principal may lack directory read access."
+    )
+    return ""
+
+
+def add_lab_user(
+    client: FabricClient, workspace_id: str, credential: TokenCredential
+) -> None:
+    """Grant the Skillable attendee access to the service-principal-owned workspace."""
+    user_id = resolve_lab_user_oid(credential)
     if not user_id:
+        print(
+            "WARNING: no lab user object ID or resolvable UPN; skipping the workspace grant. "
+            "Parts 2 and 4 require the signed-in user to have Fabric workspace access."
+        )
         return
     try:
         client.core.workspaces.add_workspace_role_assignment(
@@ -261,8 +291,11 @@ def add_lab_user(client: FabricClient, workspace_id: str) -> None:
                 role="Admin",
             ),
         )
+        print("Granted the lab user Admin access to the workspace.")
     except HttpResponseError as error:
-        if error.status_code != 409:
+        if error.status_code == 409:
+            print("Lab user already has workspace access.")
+        else:
             raise
 
 
@@ -833,7 +866,7 @@ def deploy(tables: dict[str, pa.Table]) -> None:
     try:
         client = FabricClient(credential)
         workspace_id = resolve_workspace(client)
-        add_lab_user(client, workspace_id)
+        add_lab_user(client, workspace_id, credential)
         lakehouse = find_lakehouse(client, workspace_id)
         if lakehouse is None:
             print(f"Creating lakehouse '{LAKEHOUSE_NAME}'...")
