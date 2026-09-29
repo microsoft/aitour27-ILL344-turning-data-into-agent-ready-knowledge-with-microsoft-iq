@@ -391,6 +391,9 @@ output AZURE_SEARCH_SERVICE_ENDPOINT string = 'https://${searchService.name}.sea
 @description('Foundry IQ (Azure AI Search) service name')
 output AZURE_SEARCH_SERVICE_NAME string = searchService.name
 
+@description('Foundry IQ (Azure AI Search) system-assigned managed identity principal ID (federated credential subject for Work IQ)')
+output SEARCH_SERVICE_PRINCIPAL_ID string = searchService.identity.principalId
+
 @description('Resource ID of the optional maintainer indexing storage account')
 output INDEXING_STORAGE_ACCOUNT_ID string = indexingStorage.?outputs.?resourceId ?? ''
 
