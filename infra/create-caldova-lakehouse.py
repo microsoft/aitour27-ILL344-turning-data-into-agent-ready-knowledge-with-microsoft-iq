@@ -696,18 +696,20 @@ def upload_table(
     ).get_file_system_client(workspace_id)
     file_client = filesystem.get_file_client(f"{lakehouse_id}/{relative_path}")
     file_client.upload_data(parquet_bytes(table), overwrite=True)
-    client.lakehouse.tables.begin_load_table(
-        workspace_id,
-        lakehouse_id,
-        table_name,
-        LoadTableRequest(
-            relative_path=relative_path,
-            path_type="File",
-            file_extension="parquet",
-            mode="Overwrite",
-            format_options=Parquet(),
-        ),
-    ).result()
+    run_fabric_operation(
+        lambda: client.lakehouse.tables.begin_load_table(
+            workspace_id,
+            lakehouse_id,
+            table_name,
+            LoadTableRequest(
+                relative_path=relative_path,
+                path_type="File",
+                file_extension="parquet",
+                mode="Overwrite",
+                format_options=Parquet(),
+            ),
+        ).result()
+    )
 
 
 def delta_schema(
@@ -787,6 +789,42 @@ def wait_for_tables(
     return missing
 
 
+def run_fabric_operation(operation) -> None:
+    """Run a Fabric long-running operation, tolerating the SDK's KeyError('status') bug.
+
+    microsoft-fabric-api raises KeyError('status') from its result callback when the
+    completion payload omits the status envelope, even though the operation finishes
+    server-side. Treat that specific error as success.
+    """
+    try:
+        operation()
+    except KeyError:
+        print("Fabric long-running operation returned no status; treating as complete.")
+
+
+def create_lakehouse(client: FabricClient, workspace_id: str):
+    """Create the lakehouse, tolerating the Fabric SDK long-running-operation bug.
+
+    When microsoft-fabric-api raises KeyError('status') from its result callback, the
+    lakehouse is still created server-side, so resolve it by name once it appears.
+    """
+    request = CreateLakehouseRequest(
+        display_name=LAKEHOUSE_NAME,
+        description="Synthetic supplier performance analytics for Caldova.",
+    )
+    try:
+        return client.lakehouse.items.begin_create_lakehouse(workspace_id, request).result
+    except KeyError:
+        print("Fabric create-lakehouse poller returned no status; resolving by name...")
+    for attempt in range(1, 13):
+        lakehouse = find_lakehouse(client, workspace_id)
+        if lakehouse is not None:
+            return lakehouse
+        print(f"Waiting for lakehouse to appear ({attempt}/12)...")
+        time.sleep(5)
+    raise RuntimeError(f"Lakehouse '{LAKEHOUSE_NAME}' was not found after creation failed.")
+
+
 def deploy(tables: dict[str, pa.Table]) -> None:
     """Create or reuse the lakehouse and overwrite all supplier tables."""
     load_dotenv(ENV_PATH, override=False)
@@ -799,13 +837,7 @@ def deploy(tables: dict[str, pa.Table]) -> None:
         lakehouse = find_lakehouse(client, workspace_id)
         if lakehouse is None:
             print(f"Creating lakehouse '{LAKEHOUSE_NAME}'...")
-            lakehouse = client.lakehouse.items.begin_create_lakehouse(
-                workspace_id,
-                CreateLakehouseRequest(
-                    display_name=LAKEHOUSE_NAME,
-                    description="Synthetic supplier performance analytics for Caldova.",
-                ),
-            ).result
+            lakehouse = create_lakehouse(client, workspace_id)
         else:
             print(f"Reusing lakehouse '{LAKEHOUSE_NAME}'.")
 

@@ -125,13 +125,18 @@ if ($fabricCapacityId) {
           -ClientSecret $clientSecret `
           -LabUserUpn $labUserUpn `
           -LabUserObjectId $labUserObjectId 2>&1 | Tee-Object -FilePath $logFile -Append
+        $fabricExit = $LASTEXITCODE
         # Append the Python-level log for debugging
         $fabricLog = Join-Path $localInfraPath "create-lakehouse.log"
         if (Test-Path $fabricLog) {
             Log "--- Fabric Python log ---"
             Get-Content $fabricLog | Add-Content -Path $logFile
         }
-        Log "Fabric Lakehouse setup complete"
+        if ($fabricExit -eq 0) {
+            Log "Fabric Lakehouse setup complete"
+        } else {
+            Log "ERROR: Fabric Lakehouse setup FAILED (exit $fabricExit). Parts 2 and 4 require Fabric IQ."
+        }
     } else {
         Log "WARNING: setup-lakehouse.ps1 not found, skipping lakehouse"
     }
