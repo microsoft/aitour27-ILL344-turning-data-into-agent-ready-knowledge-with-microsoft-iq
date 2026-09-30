@@ -133,7 +133,9 @@ def work_iq_scope_id(work_iq_sp: dict) -> str:
 
 
 def find_application(graph: GraphClient, app_id: str) -> dict | None:
-    """Return an application registration by client ID, or None."""
+    """Return an application registration by client ID, or None when unset or absent."""
+    if not app_id.strip():
+        return None
     response = graph.get(f"/applications(appId='{app_id}')")
     if response.status_code == 200:
         return response.json()
