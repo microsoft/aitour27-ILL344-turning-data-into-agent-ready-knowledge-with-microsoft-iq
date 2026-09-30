@@ -16,7 +16,12 @@ from pathlib import Path
 
 import requests
 from azure.core.credentials import TokenCredential
-from azure.identity import AzureDeveloperCliCredential, DefaultAzureCredential
+from azure.identity import (
+    AzureCliCredential,
+    AzureDeveloperCliCredential,
+    ChainedTokenCredential,
+    DefaultAzureCredential,
+)
 from dotenv import load_dotenv
 
 REPO_ROOT = Path(__file__).parents[1]
@@ -28,10 +33,13 @@ load_dotenv(dotenv_path=ENV_PATH, override=True)
 
 
 def create_credential(tenant_id: str) -> TokenCredential:
-    """Use a service principal in Skillable and azd credentials for local setup."""
+    """Resolve a Graph credential across Skillable, a signed-in az session, and azd."""
     if os.getenv("AZURE_CLIENT_ID") and os.getenv("AZURE_CLIENT_SECRET"):
         return DefaultAzureCredential()
-    return AzureDeveloperCliCredential(tenant_id=tenant_id)
+    return ChainedTokenCredential(
+        AzureCliCredential(tenant_id=tenant_id),
+        AzureDeveloperCliCredential(tenant_id=tenant_id),
+    )
 
 
 class GraphClient:
