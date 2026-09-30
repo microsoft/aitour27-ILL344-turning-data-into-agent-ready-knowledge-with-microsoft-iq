@@ -101,32 +101,43 @@ Pop-Location
 
 # Create the Fabric Data Agent over the ontology so Part 2 can query the new-experience
 # ontology through the fabricDataAgent knowledge source. Runs in an isolated venv because
-# fabric-data-agent-sdk conflicts with the main venv's azure-identity pin. Non-fatal: the
-# rest of the lab does not depend on it.
+# fabric-data-agent-sdk pins azure-identity==1.17.1, which conflicts with the main venv.
+# Non-fatal: this block must never stop the lakehouse and ontology setup, so errors are
+# contained and native stderr (pip notices and warnings) cannot terminate the script.
 if ($exitCode -eq 0) {
-    Write-Output ""
-    Write-Output "Setting up Fabric Data Agent..."
-    $daVenv = Join-Path $repoRoot ".venv-dataagent"
-    if (-not (Test-Path $daVenv)) { python -m venv $daVenv }
-    $daPy = Join-Path $daVenv "Scripts\python.exe"
-    if (-not (Test-Path $daPy)) { $daPy = Join-Path $daVenv "bin/python" }
-    if (Test-Path $daPy) {
-        & $daPy -m pip install --upgrade pip --quiet 2>$null
-        & $daPy -m pip install --pre --quiet fabric-data-agent-sdk python-dotenv 2>$null
-        $dataAgentScript = Join-Path $repoRoot "create-caldova-dataagent.py"
-        if (Test-Path $dataAgentScript) {
-            Push-Location $repoRoot
-            & $daPy $dataAgentScript --apply
-            $daExit = $LASTEXITCODE
-            Pop-Location
-            if ($daExit -eq 0) {
-                Write-Output "Fabric Data Agent setup complete"
+    $previousPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        Write-Output ""
+        Write-Output "Setting up Fabric Data Agent..."
+        $daVenv = Join-Path $repoRoot ".venv-dataagent"
+        if (-not (Test-Path $daVenv)) { python -m venv $daVenv }
+        $daPy = Join-Path $daVenv "Scripts\python.exe"
+        if (-not (Test-Path $daPy)) { $daPy = Join-Path $daVenv "bin/python" }
+        if (-not (Test-Path $daPy)) {
+            Write-Output "WARNING: Could not create the data agent venv; skipping Fabric Data Agent."
+        } else {
+            & $daPy -m pip install --upgrade pip --quiet 2>&1 | Out-Null
+            & $daPy -m pip install --pre --quiet --timeout 120 --retries 5 fabric-data-agent-sdk python-dotenv 2>&1 | Out-Null
+            if ($LASTEXITCODE -ne 0) {
+                Write-Output "WARNING: Could not install fabric-data-agent-sdk (exit $LASTEXITCODE). Part 2 will not have FABRIC_DATA_AGENT_ID."
             } else {
-                Write-Output "WARNING: Fabric Data Agent setup failed. Part 2 will not have FABRIC_DATA_AGENT_ID."
+                $dataAgentScript = Join-Path $repoRoot "create-caldova-dataagent.py"
+                Push-Location $repoRoot
+                & $daPy $dataAgentScript --apply 2>&1 | ForEach-Object { "$_" }
+                $daExit = $LASTEXITCODE
+                Pop-Location
+                if ($daExit -eq 0) {
+                    Write-Output "Fabric Data Agent setup complete"
+                } else {
+                    Write-Output "WARNING: Fabric Data Agent setup failed (exit $daExit). Part 2 will not have FABRIC_DATA_AGENT_ID."
+                }
             }
         }
-    } else {
-        Write-Output "WARNING: Could not create the data agent venv; skipping Fabric Data Agent."
+    } catch {
+        Write-Output "WARNING: Fabric Data Agent setup error: $($_.Exception.Message)"
+    } finally {
+        $ErrorActionPreference = $previousPreference
     }
 }
 
