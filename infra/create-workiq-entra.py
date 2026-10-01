@@ -49,9 +49,15 @@ TOKEN_EXCHANGE_AUDIENCE = "api://AzureADTokenExchange"
 # Many labs can start at once, so retry Graph throttling and transient errors, and wait for
 # newly created objects to replicate before the next call uses them.
 MAX_RETRIES = 6
-PROPAGATION_TIMEOUT_SECONDS = 180
-PROPAGATION_INTERVAL_SECONDS = 5
+PROPAGATION_TIMEOUT_SECONDS = 600
+PROPAGATION_INTERVAL_SECONDS = 15
 RETRY_STATUS_CODES = {429, 500, 502, 503, 504}
+
+PERMISSION_HINT = (
+    "The identity needs the Cloud Application Administrator role, or the Microsoft Graph "
+    "application permissions Application.ReadWrite.All, DelegatedPermissionGrant.ReadWrite.All, "
+    "and Directory.Read.All with admin consent."
+)
 
 load_dotenv(dotenv_path=ENV_PATH, override=True)
 
@@ -131,7 +137,8 @@ def wait_until_ready(action: str, call):
     """Retry a call while a newly created directory object is still replicating.
 
     Microsoft Entra is eventually consistent, so a just-created application or service
-    principal can briefly return 404 or 400 to follow-up calls.
+    principal can return 400 or 404 to follow-up calls for several minutes. This includes
+    Directory_ObjectNotFound "Unable to read the company information from the directory".
     """
     deadline = time.monotonic() + PROPAGATION_TIMEOUT_SECONDS
     while True:
@@ -139,7 +146,10 @@ def wait_until_ready(action: str, call):
             return call()
         except GraphNotReadyError as error:
             if time.monotonic() >= deadline:
-                raise RuntimeError(f"{action} did not succeed in time: {error}") from None
+                raise RuntimeError(
+                    f"{action} did not succeed after {PROPAGATION_TIMEOUT_SECONDS} seconds. "
+                    f"If this persists, check permissions. {PERMISSION_HINT} Last error: {error}"
+                ) from None
             print(f"Waiting for Microsoft Entra to replicate ({action})...")
             time.sleep(PROPAGATION_INTERVAL_SECONDS)
 
@@ -148,18 +158,14 @@ def _raise_for_graph(response: requests.Response) -> None:
     """Raise a helpful error, calling out the permissions Work IQ setup requires."""
     if response.ok:
         return
-    denied = response.status_code in (401, 403) or (
-        "Directory_ObjectNotFound" in response.text and "company information" in response.text
-    )
-    if denied:
+    if response.status_code in (401, 403):
         raise RuntimeError(
             "Work IQ Entra setup was denied. The identity needs to create app registrations, "
             "grant tenant-wide admin consent for WorkIQAgent.Ask, and create federated "
-            "credentials. Assign it the Cloud Application Administrator role, or grant the "
-            "Microsoft Graph application permissions Application.ReadWrite.All, "
-            "DelegatedPermissionGrant.ReadWrite.All, and Directory.Read.All with admin consent. "
+            f"credentials. {PERMISSION_HINT} "
             f"Underlying error: {response.status_code} {response.text}"
         )
+    # Includes the replication-delay 404 "Unable to read the company information".
     if response.status_code in (400, 404):
         raise GraphNotReadyError(f"Microsoft Graph error {response.status_code}: {response.text}")
     raise RuntimeError(f"Microsoft Graph error {response.status_code}: {response.text}")
@@ -410,6 +416,8 @@ def main() -> None:
     else:
         try:
             apply()
+        except GraphNotReadyError as error:
+            raise SystemExit(f"ERROR: {error} {PERMISSION_HINT}") from None
         except Exception as error:  # noqa: BLE001 - report any failure as a clean exit code
             raise SystemExit(f"ERROR: {error}") from None
 
