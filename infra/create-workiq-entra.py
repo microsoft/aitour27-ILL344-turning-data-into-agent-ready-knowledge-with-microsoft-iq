@@ -18,6 +18,7 @@ https://learn.microsoft.com/azure/search/agentic-knowledge-source-how-to-work-iq
 
 import argparse
 import os
+import time
 import uuid
 from pathlib import Path
 
@@ -45,6 +46,13 @@ WORK_IQ_SCOPE_ID_FALLBACK = "0b1715fd-f4bf-4c63-b16d-5be31f9847c2"
 CLIENT_SCOPE = "access_as_user"
 TOKEN_EXCHANGE_AUDIENCE = "api://AzureADTokenExchange"
 
+# Many labs can start at once, so retry Graph throttling and transient errors, and wait for
+# newly created objects to replicate before the next call uses them.
+MAX_RETRIES = 6
+PROPAGATION_TIMEOUT_SECONDS = 180
+PROPAGATION_INTERVAL_SECONDS = 5
+RETRY_STATUS_CODES = {429, 500, 502, 503, 504}
+
 load_dotenv(dotenv_path=ENV_PATH, override=True)
 
 
@@ -71,45 +79,89 @@ def create_credential(tenant_id: str) -> TokenCredential:
     )
 
 
+class GraphNotReadyError(RuntimeError):
+    """A Graph call failed because a just-created object has not replicated yet."""
+
+
 class GraphClient:
-    """Minimal Microsoft Graph REST client with a bearer token."""
+    """Minimal Microsoft Graph REST client with throttling and transient-error retries."""
 
     def __init__(self, credential: TokenCredential) -> None:
         self._credential = credential
 
     def _headers(self) -> dict[str, str]:
         token = self._credential.get_token(GRAPH_SCOPE).token
-        return {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+        return {"Authorization": "Bearer " + token, "Content-Type": "application/json"}
+
+    def request(self, method: str, path: str, payload: dict | None = None) -> requests.Response:
+        """Send a request, retrying throttling (429) and transient server errors."""
+        for attempt in range(MAX_RETRIES + 1):
+            try:
+                response = requests.request(
+                    method,
+                    f"{GRAPH_BASE}{path}",
+                    headers=self._headers(),
+                    json=payload,
+                    timeout=120,
+                )
+            except requests.RequestException:
+                if attempt == MAX_RETRIES:
+                    raise
+                time.sleep(min(2**attempt, 30))
+                continue
+            if response.status_code not in RETRY_STATUS_CODES or attempt == MAX_RETRIES:
+                return response
+            delay = response.headers.get("Retry-After", "")
+            time.sleep(int(delay) if delay.isdigit() else min(2**attempt, 30))
+        return response
 
     def get(self, path: str) -> requests.Response:
-        return requests.get(f"{GRAPH_BASE}{path}", headers=self._headers(), timeout=120)
+        return self.request("GET", path)
 
     def post(self, path: str, payload: dict) -> dict:
-        response = requests.post(
-            f"{GRAPH_BASE}{path}", headers=self._headers(), json=payload, timeout=120
-        )
+        response = self.request("POST", path, payload)
         _raise_for_graph(response)
         return response.json() if response.content else {}
 
     def patch(self, path: str, payload: dict) -> None:
-        response = requests.patch(
-            f"{GRAPH_BASE}{path}", headers=self._headers(), json=payload, timeout=120
-        )
-        _raise_for_graph(response)
+        _raise_for_graph(self.request("PATCH", path, payload))
+
+
+def wait_until_ready(action: str, call):
+    """Retry a call while a newly created directory object is still replicating.
+
+    Microsoft Entra is eventually consistent, so a just-created application or service
+    principal can briefly return 404 or 400 to follow-up calls.
+    """
+    deadline = time.monotonic() + PROPAGATION_TIMEOUT_SECONDS
+    while True:
+        try:
+            return call()
+        except GraphNotReadyError as error:
+            if time.monotonic() >= deadline:
+                raise RuntimeError(f"{action} did not succeed in time: {error}") from None
+            print(f"Waiting for Microsoft Entra to replicate ({action})...")
+            time.sleep(PROPAGATION_INTERVAL_SECONDS)
 
 
 def _raise_for_graph(response: requests.Response) -> None:
-    """Raise a helpful error, calling out the admin roles Work IQ setup requires."""
+    """Raise a helpful error, calling out the permissions Work IQ setup requires."""
     if response.ok:
         return
-    if response.status_code in (401, 403):
+    denied = response.status_code in (401, 403) or (
+        "Directory_ObjectNotFound" in response.text and "company information" in response.text
+    )
+    if denied:
         raise RuntimeError(
             "Work IQ Entra setup was denied. The identity needs to create app registrations, "
             "grant tenant-wide admin consent for WorkIQAgent.Ask, and create federated "
-            "credentials. Use an identity with Application Administrator or Cloud Application "
-            "Administrator (or higher). Underlying error: "
-            f"{response.status_code} {response.text}"
+            "credentials. Assign it the Cloud Application Administrator role, or grant the "
+            "Microsoft Graph application permissions Application.ReadWrite.All, "
+            "DelegatedPermissionGrant.ReadWrite.All, and Directory.Read.All with admin consent. "
+            f"Underlying error: {response.status_code} {response.text}"
         )
+    if response.status_code in (400, 404):
+        raise GraphNotReadyError(f"Microsoft Graph error {response.status_code}: {response.text}")
     raise RuntimeError(f"Microsoft Graph error {response.status_code}: {response.text}")
 
 
@@ -132,26 +184,26 @@ def work_iq_scope_id(work_iq_sp: dict) -> str:
     return WORK_IQ_SCOPE_ID_FALLBACK
 
 
-def find_application(graph: GraphClient, app_id: str) -> dict | None:
-    """Return an application registration by client ID, or None when unset or absent."""
-    if not app_id.strip():
-        return None
-    response = graph.get(f"/applications(appId='{app_id}')")
-    if response.status_code == 200:
-        return response.json()
-    if response.status_code == 404:
-        return None
+def find_application(graph: GraphClient, app_id: str, display_name: str) -> dict | None:
+    """Return the lab's app by client ID, or by its unique per-lab display name."""
+    if app_id.strip():
+        response = graph.get(f"/applications(appId='{app_id}')")
+        if response.status_code == 200:
+            return response.json()
+        if response.status_code != 404:
+            _raise_for_graph(response)
+    # Fall back to the display name so a rerun reuses the app instead of creating a duplicate.
+    escaped = display_name.replace("'", "''")
+    response = graph.get(f"/applications?$filter=displayName eq '{escaped}'")
     _raise_for_graph(response)
-    return None
+    matches = response.json().get("value", [])
+    return matches[0] if matches else None
 
 
-def create_application(
-    graph: GraphClient, display_name: str, work_iq_scope: str
-) -> dict:
+def create_application(graph: GraphClient, display_name: str, work_iq_scope: str) -> dict:
     """Create the single-tenant Work IQ client application with the access_as_user scope."""
-    scope_id = str(uuid.uuid4())
     exposed_scope = {
-        "id": scope_id,
+        "id": str(uuid.uuid4()),
         "adminConsentDisplayName": "Access Azure AI Search as the signed-in user",
         "adminConsentDescription": (
             "Allow Azure AI Search to call Work IQ on behalf of the signed-in user."
@@ -165,7 +217,7 @@ def create_application(
         "isEnabled": True,
     }
     print(f"Creating the single-tenant Work IQ application '{display_name}'...")
-    application = graph.post(
+    return graph.post(
         "/applications",
         {
             "displayName": display_name,
@@ -181,57 +233,81 @@ def create_application(
             "api": {"oauth2PermissionScopes": [exposed_scope]},
         },
     )
+
+
+def configure_application(graph: GraphClient, application: dict) -> None:
+    """Set the identifier URI and pre-authorize the app as its own client.
+
+    This lets the notebook request api://<app-id>/access_as_user without an extra consent
+    prompt. It is idempotent, so a rerun completes an app that a previous run left unfinished.
+    """
     app_id = application["appId"]
-    # Set the identifier URI and pre-authorize the app as its own client so the notebook
-    # can request api://<app-id>/access_as_user without an extra consent prompt.
-    graph.patch(
-        f"/applications/{application['id']}",
-        {
-            "identifierUris": [f"api://{app_id}"],
-            "api": {
-                "oauth2PermissionScopes": [exposed_scope],
-                "preAuthorizedApplications": [
-                    {"appId": app_id, "delegatedPermissionIds": [scope_id]}
-                ],
+    scopes = (application.get("api") or {}).get("oauth2PermissionScopes") or []
+    scope = next((item for item in scopes if item.get("value") == CLIENT_SCOPE), None)
+    if scope is None:
+        raise RuntimeError(f"Application {app_id} does not expose the {CLIENT_SCOPE} scope.")
+    identifier = f"api://{app_id}"
+    authorized = (application.get("api") or {}).get("preAuthorizedApplications") or []
+    if identifier in (application.get("identifierUris") or []) and any(
+        item.get("appId") == app_id for item in authorized
+    ):
+        return
+    wait_until_ready(
+        "configure the application",
+        lambda: graph.patch(
+            f"/applications/{application['id']}",
+            {
+                "identifierUris": [identifier],
+                "api": {
+                    "oauth2PermissionScopes": scopes,
+                    "preAuthorizedApplications": [
+                        {"appId": app_id, "delegatedPermissionIds": [scope["id"]]}
+                    ],
+                },
             },
-        },
+        ),
     )
-    return application
 
 
 def ensure_service_principal(graph: GraphClient, app_id: str) -> dict:
     """Return the app's service principal, creating it when needed."""
-    response = graph.get(f"/servicePrincipals(appId='{app_id}')")
-    if response.status_code == 200:
-        return response.json()
-    if response.status_code != 404:
-        _raise_for_graph(response)
-    return graph.post("/servicePrincipals", {"appId": app_id})
+
+    def attempt() -> dict:
+        response = graph.get(f"/servicePrincipals(appId='{app_id}')")
+        if response.status_code == 200:
+            return response.json()
+        if response.status_code != 404:
+            _raise_for_graph(response)
+        return graph.post("/servicePrincipals", {"appId": app_id})
+
+    return wait_until_ready("create the service principal", attempt)
 
 
-def grant_admin_consent(
-    graph: GraphClient, client_sp_id: str, work_iq_sp_id: str
-) -> None:
+def grant_admin_consent(graph: GraphClient, client_sp_id: str, work_iq_sp_id: str) -> None:
     """Grant tenant-wide WorkIQAgent.Ask consent to the client service principal."""
-    existing = graph.get(
-        "/oauth2PermissionGrants"
-        f"?$filter=clientId eq '{client_sp_id}' and resourceId eq '{work_iq_sp_id}'"
-    )
-    if existing.status_code == 200:
+
+    def attempt() -> None:
+        existing = graph.get(
+            "/oauth2PermissionGrants"
+            f"?$filter=clientId eq '{client_sp_id}' and resourceId eq '{work_iq_sp_id}'"
+        )
+        _raise_for_graph(existing)
         for grant in existing.json().get("value", []):
             if WORK_IQ_SCOPE in (grant.get("scope") or "").split():
                 print(f"Admin consent for {WORK_IQ_SCOPE} is already granted.")
                 return
-    graph.post(
-        "/oauth2PermissionGrants",
-        {
-            "clientId": client_sp_id,
-            "consentType": "AllPrincipals",
-            "resourceId": work_iq_sp_id,
-            "scope": WORK_IQ_SCOPE,
-        },
-    )
-    print(f"Granted tenant-wide admin consent for {WORK_IQ_SCOPE}.")
+        graph.post(
+            "/oauth2PermissionGrants",
+            {
+                "clientId": client_sp_id,
+                "consentType": "AllPrincipals",
+                "resourceId": work_iq_sp_id,
+                "scope": WORK_IQ_SCOPE,
+            },
+        )
+        print(f"Granted tenant-wide admin consent for {WORK_IQ_SCOPE}.")
+
+    wait_until_ready("grant admin consent", attempt)
 
 
 def create_federated_credential(
@@ -242,22 +318,26 @@ def create_federated_credential(
     subject: str,
 ) -> str:
     """Create (or reuse) a federated credential trusting the search service identity."""
-    existing = graph.get(f"/applications/{app_object_id}/federatedIdentityCredentials")
-    if existing.status_code == 200:
+
+    def attempt() -> str:
+        existing = graph.get(f"/applications/{app_object_id}/federatedIdentityCredentials")
+        _raise_for_graph(existing)
         for credential in existing.json().get("value", []):
             if credential.get("subject") == subject and credential.get("id"):
                 print("Reusing the existing federated credential for the search identity.")
                 return credential["id"]
-    created = graph.post(
-        f"/applications/{app_object_id}/federatedIdentityCredentials",
-        {
-            "name": credential_name,
-            "issuer": f"https://login.microsoftonline.com/{tenant_id}/v2.0",
-            "subject": subject,
-            "audiences": [TOKEN_EXCHANGE_AUDIENCE],
-        },
-    )
-    return created["id"]
+        created = graph.post(
+            f"/applications/{app_object_id}/federatedIdentityCredentials",
+            {
+                "name": credential_name,
+                "issuer": f"https://login.microsoftonline.com/{tenant_id}/v2.0",
+                "subject": subject,
+                "audiences": [TOKEN_EXCHANGE_AUDIENCE],
+            },
+        )
+        return created["id"]
+
+    return wait_until_ready("create the federated credential", attempt)
 
 
 def save_env(app_id: str, tenant_id: str, federated_credential_id: str) -> None:
@@ -285,11 +365,12 @@ def apply() -> None:
     work_iq_sp = get_or_create_work_iq_sp(graph)
     scope_id = work_iq_scope_id(work_iq_sp)
 
-    application = find_application(graph, os.getenv("WORK_IQ_ENTRA_APP_ID", ""))
+    application = find_application(graph, os.getenv("WORK_IQ_ENTRA_APP_ID", ""), display_name)
     if application:
         print(f"Reusing Work IQ application {application['appId']}.")
     else:
         application = create_application(graph, display_name, scope_id)
+    configure_application(graph, application)
 
     client_sp = ensure_service_principal(graph, application["appId"])
     grant_admin_consent(graph, client_sp["id"], work_iq_sp["id"])
@@ -329,7 +410,7 @@ def main() -> None:
     else:
         try:
             apply()
-        except RuntimeError as error:
+        except Exception as error:  # noqa: BLE001 - report any failure as a clean exit code
             raise SystemExit(f"ERROR: {error}") from None
 
 
