@@ -55,6 +55,8 @@ This will:
 
 > **Note:** Email seeding (used in the hosted Skillable lab for Part 3 - Work IQ) requires a service principal with `Mail.Send` application permission and is **not run** during self-deploy. Part 3 will use your own mailbox data instead.
 
+> **Work IQ prerequisites (Parts 3 and 4):** Work IQ requires (1) a usage-based billing plan (Copilot credits) for Work IQ configured in Copilot Studio, with each user assigned to it, (2) a Microsoft Entra Global Administrator enabling the Work IQ API in the tenant, and (3) an identity running `azd up` with the Cloud Application Administrator role (or the Microsoft Graph application permissions `Application.ReadWrite.All`, `DelegatedPermissionGrant.ReadWrite.All`, and `Directory.Read.All`), so `infra/create-workiq-entra.py` can create the Work IQ Entra app, grant `WorkIQAgent.Ask` admin consent, and add a federated credential for the search service identity. The provisioning hook is non-fatal, so Parts 1, 2, and 5 still deploy when Work IQ setup is unavailable. See [Create a Work IQ knowledge source](https://learn.microsoft.com/azure/search/agentic-knowledge-source-how-to-work-iq).
+
 ### 4. Start the Lab
 
 Open the [notebooks](src/notebooks) folder in VS Code and **start with `part1-standard-foundry-iq-kb.ipynb`**.
