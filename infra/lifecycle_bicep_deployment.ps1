@@ -159,6 +159,25 @@ if ($fabricCapacityId) {
      Log "Email seeding complete"
  }
 
+# Provision the per-lab Work IQ Entra app and federated credential (non-fatal).
+# Needs Cloud Application Administrator (or Graph Application.ReadWrite.All,
+# DelegatedPermissionGrant.ReadWrite.All and Directory.Read.All) on the lab service principal.
+# Parts 3 and 4 require this step.
+$env:AZURE_CLIENT_ID = $clientId
+$env:AZURE_CLIENT_SECRET = $clientSecret
+$env:AZURE_TENANT_ID = $tenantId
+$env:SEARCH_SERVICE_PRINCIPAL_ID = $outs.SEARCH_SERVICE_PRINCIPAL_ID.value
+$env:AZURE_SEARCH_SERVICE_NAME = $searchName
+$workIqPython = "C:\Users\LabUser\Desktop\aitour-ILL344\.venv\Scripts\python.exe"
+if (-not (Test-Path $workIqPython)) { $workIqPython = "python" }
+Log "Provisioning Work IQ Entra app..."
+& $workIqPython (Join-Path $localInfraPath "create-workiq-entra.py") --apply *>> $logFile
+if ($LASTEXITCODE -ne 0) {
+    Log "WARN: Work IQ Entra setup failed (exit $LASTEXITCODE). Parts 3 and 4 require it."
+} else {
+    Log "Work IQ Entra setup complete"
+}
+
 Log "=== Background deploy script completed ==="
 '@
 
