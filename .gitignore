@@ -440,5 +440,3 @@ Thumbs.db
 .env.local
 .env.*.local
 .venv/
-
-.venv-dataagent/

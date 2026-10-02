@@ -25,12 +25,10 @@ if [ -n "$FABRIC_WORKSPACE_ID" ] || [ -n "$FABRIC_CAPACITY_ID" ]; then
     python3 infra/create-caldova-lakehouse.py
     python3 infra/create-caldova-ontology.py
 
-    # Create the Fabric Data Agent over the ontology (Part 2). Isolated venv because
-    # fabric-data-agent-sdk conflicts with the main azure-identity pin. Non-fatal.
+    # Create the Fabric Data Agent over the ontology (Part 2). Uses the Fabric REST API
+    # with packages already installed from requirements.txt. Non-fatal.
     echo "Setting up Fabric Data Agent..."
-    python3 -m venv .venv-dataagent
-    .venv-dataagent/bin/python -m pip install --pre --quiet fabric-data-agent-sdk python-dotenv \
-        && .venv-dataagent/bin/python infra/create-caldova-dataagent.py --apply \
+    python3 infra/create-caldova-dataagent.py --apply \
         || echo "WARN: Fabric Data Agent setup failed. Part 2 will not have FABRIC_DATA_AGENT_ID."
 fi
 
