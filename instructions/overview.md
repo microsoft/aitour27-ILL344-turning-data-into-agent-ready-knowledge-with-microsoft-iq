@@ -113,7 +113,4 @@ This lab includes 5 progressive notebooks covering different knowledge base, sou
 
 Start with **part1-standard-foundry-iq-kb.ipynb** in the **src/notebooks/** folder and progress through each notebook sequentially.
 
-> [!TIP]
-> **Bonus: GitHub Copilot App sidequest** - Part 1 includes a bonus section that prints an MCP URL for the knowledge base you created. Follow the instructions in **src/notebooks/copilot-app-sidequest.md** to add it to GitHub Copilot App and query your KB directly from the app.
-
 Once you've completed all 5 notebooks, select **Next** to review key takeaways and next steps.
