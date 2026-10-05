@@ -99,33 +99,6 @@ if ($exitCode -eq 0) {
 }
 Pop-Location
 
-# Create the Fabric Data Agent over the ontology so Part 2 can query the new-experience
-# ontology through the fabricDataAgent knowledge source. The script calls the Fabric REST API
-# with packages already in this venv, so it needs no extra SDK or .NET runtime.
-# Non-fatal: this block must never stop the lakehouse and ontology setup, so errors are
-# contained and native stderr cannot terminate the script under Windows PowerShell 5.1.
-if ($exitCode -eq 0) {
-    $previousPreference = $ErrorActionPreference
-    $ErrorActionPreference = "Continue"
-    Push-Location $repoRoot
-    try {
-        Write-Output ""
-        Write-Output "Setting up Fabric Data Agent..."
-        & $venvPy (Join-Path $repoRoot "create-caldova-dataagent.py") --apply 2>&1 | ForEach-Object { "$_" }
-        $daExit = $LASTEXITCODE
-        if ($daExit -eq 0) {
-            Write-Output "Fabric Data Agent setup complete"
-        } else {
-            Write-Output "WARNING: Fabric Data Agent setup failed (exit $daExit). Part 2 will not have FABRIC_DATA_AGENT_ID."
-        }
-    } catch {
-        Write-Output "WARNING: Fabric Data Agent setup error: $($_.Exception.Message)"
-    } finally {
-        Pop-Location
-        $ErrorActionPreference = $previousPreference
-    }
-}
-
 if ($exitCode -eq 0) {
     Write-Output ""
     Write-Output "Lakehouse and ontology setup completed successfully!"
