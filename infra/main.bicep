@@ -28,8 +28,8 @@ param foundryDeploymentSuffix string = ''
 param location string
 
 @description('AI Search service SKU')
-@allowed(['basic', 'standard', 'standard2', 'standard3', 'storage_optimized_l1', 'storage_optimized_l2'])
-param searchServiceSku string = 'standard'
+@allowed(['basic', 'standard', 'standard2', 'standard3', 'storage_optimized_l1', 'storage_optimized_l2', 'serverless'])
+param searchServiceSku string = 'serverless'
 
 @description('Text embedding model name')
 @allowed(['text-embedding-3-large'])
@@ -74,16 +74,18 @@ var resourceNames = {
 // ===============================================
 
 @description('Foundry IQ (Azure AI Search) service for vector search and document indexing')
-resource searchService 'Microsoft.Search/searchServices@2023-11-01' = {
+resource searchService 'Microsoft.Search/searchServices@2026-09-01-preview' = {
   name: resourceNames.searchService
-  location: 'westcentralus'
+  // Serverless preview is only in some regions; West Central US had no serverless capacity on 2026-10-05.
+  location: 'northcentralus'
   sku: {
     name: searchServiceSku
   }
   properties: {
-    replicaCount: 1
-    partitionCount: 1
-    hostingMode: 'default'
+    // Serverless scales automatically, so replicas and partitions apply only to dedicated tiers.
+    replicaCount: searchServiceSku == 'serverless' ? null : 1
+    partitionCount: searchServiceSku == 'serverless' ? null : 1
+    hostingMode: searchServiceSku == 'serverless' ? null : 'default'
     publicNetworkAccess: 'enabled'
     networkRuleSet: {
       ipRules: []
