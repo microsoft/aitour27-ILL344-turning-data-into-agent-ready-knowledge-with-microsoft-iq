@@ -11,9 +11,7 @@ See:
 """
 
 import argparse
-import json
 import os
-import time
 from pathlib import Path
 
 from azure.core.credentials import TokenCredential
@@ -28,9 +26,6 @@ from dotenv import load_dotenv, set_key
 REPO_ROOT = Path(__file__).parents[1]
 ENV_PATH = REPO_ROOT / ".env"
 DATA_AGENT_NAME = "CaldovaMedicinalProductDataAgent"
-WAIT_TIMEOUT_SECONDS = 300
-WAIT_INTERVAL_SECONDS = 10
-CREATE_ATTEMPTS = 6
 
 load_dotenv(dotenv_path=ENV_PATH, override=True)
 
@@ -53,76 +48,6 @@ def create_credential(tenant_id: str) -> TokenCredential:
     )
 
 
-def list_datasources(client, stage: str) -> list[dict]:
-    """Return all staging or published datasource entries across pages."""
-    fetch = (
-        client.get_staging_datasources
-        if stage == "staging"
-        else client.get_published_datasources
-    )
-    entries: list[dict] = []
-    token = None
-    while True:
-        response = fetch(token)
-        values = response.get("value", []) if isinstance(response, dict) else []
-        entries.extend(value for value in values if isinstance(value, dict))
-        token = response.get("continuationToken") if isinstance(response, dict) else None
-        if not token:
-            return entries
-
-
-def has_ontology(entries: list[dict], ontology_id: str) -> bool:
-    """Return True when any datasource entry references the ontology item."""
-    needle = ontology_id.lower()
-    return any(needle in json.dumps(entry).lower() for entry in entries)
-
-
-def wait_for_ontology(client, stage: str, ontology_id: str) -> None:
-    """Poll until the ontology appears in the given stage, or fail."""
-    deadline = time.monotonic() + WAIT_TIMEOUT_SECONDS
-    while True:
-        if has_ontology(list_datasources(client, stage), ontology_id):
-            print(f"Ontology is attached in the {stage} configuration.")
-            return
-        if time.monotonic() >= deadline:
-            raise RuntimeError(
-                f"The ontology did not appear in the {stage} data agent configuration "
-                f"within {WAIT_TIMEOUT_SECONDS} seconds."
-            )
-        print(f"Waiting for the ontology in the {stage} configuration...")
-        time.sleep(WAIT_INTERVAL_SECONDS)
-
-
-def get_or_create_agent(create_data_agent, workspace_id: str):
-    """Create the data agent, or return it when it already exists.
-
-    create_data_agent returns the existing agent when the display name is already in use.
-    Retry because a newly created item can take a moment to become resolvable by name.
-    """
-    last_error: Exception | None = None
-    for attempt in range(1, CREATE_ATTEMPTS + 1):
-        try:
-            return create_data_agent(DATA_AGENT_NAME, workspace_id=workspace_id)
-        except Exception as error:  # noqa: BLE001 - retried, then surfaced
-            last_error = error
-            print(f"Data agent not ready yet ({attempt}/{CREATE_ATTEMPTS}): {error}")
-            time.sleep(WAIT_INTERVAL_SECONDS)
-    raise RuntimeError(f"Could not create or resolve the data agent: {last_error}")
-
-
-def publish(management) -> None:
-    """Publish the staging configuration, accepting an asynchronous 202 response."""
-    try:
-        management.publish_staging(
-            description="Caldova medicinal product ontology for agentic retrieval."
-        )
-    except Exception as error:  # noqa: BLE001 - the SDK only accepts 200
-        status = getattr(getattr(error, "response", None), "status_code", None)
-        if status != 202:
-            raise
-        print("Publish accepted and running asynchronously.")
-
-
 def apply() -> None:
     """Create, bind, and publish the Caldova ontology data agent."""
     tenant_id = os.getenv("FABRIC_TENANT_ID") or require_env("AZURE_TENANT_ID")
@@ -133,24 +58,28 @@ def apply() -> None:
     from fabric.analytics.environment.credentials import (
         SetFabricAnalyticsDefaultTokenCredentialsGlobally,
     )
-    from fabric.dataagent.client import create_data_agent
+    from fabric.dataagent.client import create_data_agent, get_data_agent
 
     SetFabricAnalyticsDefaultTokenCredentialsGlobally(create_credential(tenant_id))
 
-    management = get_or_create_agent(create_data_agent, workspace_id)
-    client = management._client
-    print(f"Using data agent '{DATA_AGENT_NAME}' ({client.data_agent_id}).")
+    try:
+        management = get_data_agent(DATA_AGENT_NAME, workspace_id)
+        print(f"Reusing existing data agent '{DATA_AGENT_NAME}'.")
+    except Exception:
+        management = create_data_agent(DATA_AGENT_NAME, workspace_id=workspace_id)
+        print(f"Created data agent '{DATA_AGENT_NAME}'.")
 
-    if has_ontology(list_datasources(client, "staging"), ontology_id):
-        print("Ontology is already attached in the staging configuration.")
-    else:
+    try:
         management.add_staging_datasource(ontology_id, workspace_id, type="ontology")
-        wait_for_ontology(client, "staging", ontology_id)
+        print("Added the Caldova ontology as a data source.")
+    except Exception as error:  # noqa: BLE001 - idempotent: source may already be attached
+        print(f"Ontology data source already attached or not re-added: {error}")
 
-    publish(management)
-    wait_for_ontology(client, "published", ontology_id)
+    management.publish_staging(
+        description="Caldova medicinal product ontology for agentic retrieval."
+    )
 
-    data_agent_id = str(client.data_agent_id)
+    data_agent_id = str(management._client.data_agent_id)
     set_key(ENV_PATH, "FABRIC_DATA_AGENT_ID", data_agent_id, quote_mode="never")
     print(f"Published data agent '{DATA_AGENT_NAME}' ({data_agent_id}).")
 
@@ -176,7 +105,7 @@ def main() -> None:
     else:
         try:
             apply()
-        except Exception as error:  # noqa: BLE001 - report any failure as a clean exit code
+        except RuntimeError as error:
             raise SystemExit(f"ERROR: {error}") from None
 
 
