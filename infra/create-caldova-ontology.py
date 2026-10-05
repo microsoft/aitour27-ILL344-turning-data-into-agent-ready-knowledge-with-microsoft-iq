@@ -435,13 +435,6 @@ def deploy() -> None:
         sql_endpoint = lakehouse.properties.sql_endpoint_properties.connection_string
         definition = build_definition(workspace_id, lakehouse.id, sql_endpoint)
         ontology = find_ontology(client, workspace_id)
-        if ontology is not None and "model.tmdl" not in stored_part_paths(
-            client, workspace_id, ontology.id
-        ):
-            print("Existing ontology uses the classic format; replacing it.")
-            client.ontology.items.delete_ontology(workspace_id, ontology.id)
-            os.environ.pop("FABRIC_ONTOLOGY_ID", None)
-            ontology = None
         if ontology is None:
             ontology = create_ontology(client, workspace_id)
         else:
