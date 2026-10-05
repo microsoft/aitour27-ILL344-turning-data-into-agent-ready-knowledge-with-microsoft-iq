@@ -27,16 +27,6 @@ if ($env:FABRIC_WORKSPACE_ID -or $env:FABRIC_CAPACITY_ID) {
     Write-Host "Setting up Fabric Lakehouse..."
     python infra\create-caldova-lakehouse.py
     python infra\create-caldova-ontology.py
-
-    # Create the Fabric Data Agent over the ontology (Part 2). Isolated venv because
-    # fabric-data-agent-sdk conflicts with the main azure-identity pin. Non-fatal.
-    Write-Host "Setting up Fabric Data Agent..."
-    python -m venv .venv-dataagent
-    .venv-dataagent\Scripts\python.exe -m pip install --pre --quiet fabric-data-agent-sdk python-dotenv 2>$null
-    .venv-dataagent\Scripts\python.exe infra\create-caldova-dataagent.py --apply
-    if ($LASTEXITCODE -ne 0) {
-        Write-Warning "Fabric Data Agent setup failed. Part 2 will not have FABRIC_DATA_AGENT_ID."
-    }
 }
 
 Write-Host "Postprovision complete! If there were no errors, you can open src/notebooks/ to start the lab."

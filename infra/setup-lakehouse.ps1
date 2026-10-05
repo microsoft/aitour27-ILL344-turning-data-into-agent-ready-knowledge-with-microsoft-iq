@@ -99,37 +99,6 @@ if ($exitCode -eq 0) {
 }
 Pop-Location
 
-# Create the Fabric Data Agent over the ontology so Part 2 can query the new-experience
-# ontology through the fabricDataAgent knowledge source. Runs in an isolated venv because
-# fabric-data-agent-sdk conflicts with the main venv's azure-identity pin. Non-fatal: the
-# rest of the lab does not depend on it.
-if ($exitCode -eq 0) {
-    Write-Output ""
-    Write-Output "Setting up Fabric Data Agent..."
-    $daVenv = Join-Path $repoRoot ".venv-dataagent"
-    if (-not (Test-Path $daVenv)) { python -m venv $daVenv }
-    $daPy = Join-Path $daVenv "Scripts\python.exe"
-    if (-not (Test-Path $daPy)) { $daPy = Join-Path $daVenv "bin/python" }
-    if (Test-Path $daPy) {
-        & $daPy -m pip install --upgrade pip --quiet 2>$null
-        & $daPy -m pip install --pre --quiet fabric-data-agent-sdk python-dotenv 2>$null
-        $dataAgentScript = Join-Path $repoRoot "create-caldova-dataagent.py"
-        if (Test-Path $dataAgentScript) {
-            Push-Location $repoRoot
-            & $daPy $dataAgentScript --apply
-            $daExit = $LASTEXITCODE
-            Pop-Location
-            if ($daExit -eq 0) {
-                Write-Output "Fabric Data Agent setup complete"
-            } else {
-                Write-Output "WARNING: Fabric Data Agent setup failed. Part 2 will not have FABRIC_DATA_AGENT_ID."
-            }
-        }
-    } else {
-        Write-Output "WARNING: Could not create the data agent venv; skipping Fabric Data Agent."
-    }
-}
-
 if ($exitCode -eq 0) {
     Write-Output ""
     Write-Output "Lakehouse and ontology setup completed successfully!"
