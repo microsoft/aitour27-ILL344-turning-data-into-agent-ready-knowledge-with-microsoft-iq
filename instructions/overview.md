@@ -82,7 +82,6 @@ All required Azure services including **Foundry IQ (Azure AI Search) with pre-in
    - *AZURE_TENANT_ID*
    - *FABRIC_WORKSPACE_ID*
    - *FABRIC_ONTOLOGY_ID*
-   - *FABRIC_DATA_AGENT_ID*
 
 If these variables are present, proceed to verify the indexes in Azure Portal.
 
