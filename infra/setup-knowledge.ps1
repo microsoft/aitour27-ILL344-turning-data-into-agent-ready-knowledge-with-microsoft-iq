@@ -66,7 +66,7 @@ Push-Location $repoRoot
 
 $pythonCmd = (Get-Command python -ErrorAction SilentlyContinue)
 if (-not $pythonCmd) { $pythonCmd = (Get-Command py -ErrorAction SilentlyContinue) }
-if (-not $pythonCmd) { throw "Python 3.10+ is required." }
+if (-not $pythonCmd) { throw "Python 3.11+ is required." }
 
 # Create venv in repo root
 if (-not (Test-Path ".venv")) {

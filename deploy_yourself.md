@@ -7,7 +7,7 @@ This folder contains resources for deploying the ILL344 knowledge base infrastru
 - **Azure subscription** with sufficient permissions to create resources
 - **Azure Developer CLI (azd)** installed ([Install guide](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd))
 - **Azure CLI** installed and configured ([Install guide](https://learn.microsoft.com/cli/azure/install-azure-cli))
-- **Python 3.10+** installed
+- **Python 3.11+** installed
 - **Git** (to clone this repository)
 - **VS Code** or **GitHub Codespaces** with Jupyter extension (recommended)
 
