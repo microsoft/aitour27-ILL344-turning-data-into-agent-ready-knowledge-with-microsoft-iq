@@ -44,7 +44,7 @@ Write-Output ""
 # Find Python
 $pythonCmd = (Get-Command python -ErrorAction SilentlyContinue)
 if (-not $pythonCmd) { $pythonCmd = (Get-Command py -ErrorAction SilentlyContinue) }
-if (-not $pythonCmd) { throw "Python 3.10+ is required. Please install Python." }
+if (-not $pythonCmd) { throw "Python 3.11+ is required. Please install Python." }
 
 # Create venv
 $venvPath = Join-Path $repoRoot ".venv"
